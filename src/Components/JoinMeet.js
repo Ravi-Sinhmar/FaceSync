@@ -197,6 +197,8 @@ const getMyVideo = useCallback(async()=>{
 
 const handleNeg = useCallback(()=>{
   const offer = peer.localDescription;
+  console.log(offer);
+  console.log(offer.content);
   adminSocket.send(
     JSON.stringify({
       type: "sendingOffer",
