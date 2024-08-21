@@ -22,7 +22,7 @@ function JoinMeet() {
 
   // contexts
   const { setFriend, adminCon, friend, setAdminCon } = useFriend();
-  const { peer, createOffer, createAnswer, setRemoteAnswer,sendVideo ,remoteStream} = usePeer();
+  const { peer, createOffer, createAnswer, setRemoteAnswer,sendVideo,remoteStream} = usePeer();
 
   const seeMeet = useCallback(() => {
     const ad = searchParams.get("adminName");
@@ -215,7 +215,7 @@ const handleNeg = useCallback(()=>{
 },[adminSocket,friend,adminCon,peer]);
 
 useEffect(()=>{
-  if(neg){
+ 
     peer.addEventListener('negotiationneeded',handleNeg);
     peer.onconnectionstatechange = () => {
       console.log('Connection state if event = negotiationneeded:', peer.connectionState);
@@ -223,8 +223,16 @@ useEffect(()=>{
      return ()=>{
       peer.removeEventListener('negotiationneeded',handleNeg);
      }
-  }
-},[handleNeg,peer,neg]);
+  
+},[handleNeg,peer]);
+
+useEffect(()=>{
+if(neg){
+  sendVideo(myVideo);
+}
+},[neg,sendVideo,myVideo]);
+
+
 
 
 
