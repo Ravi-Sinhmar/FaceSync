@@ -185,7 +185,7 @@ const getMyVideo = useCallback(async()=>{
             })
           );
         } else if (data.type === "sendingAnswer") {
-          console.log("state of wbeb",peer.connectionState);
+         
           await setRemoteAnswer(data.content);
           setNeg(true);
           console.log("got answer from", data.userName);
