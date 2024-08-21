@@ -59,6 +59,8 @@ function JoinMeet() {
     seeMeet();
   }, [seeMeet]);
 
+
+
   const startAdminSocket = useCallback(() => {
     if (needWebSocket) {
       if (admin) {
@@ -90,6 +92,7 @@ function JoinMeet() {
   useEffect(() => {
     startAdminSocket();
   }, [startAdminSocket]);
+
 
   useEffect(() => {
     const handleSocketOpen = () => {
@@ -191,6 +194,28 @@ const getMyVideo = useCallback(async()=>{
   useEffect(()=>{
      getMyVideo();
   },[getMyVideo]);
+
+const handleNeg = useCallback(()=>{
+  const offer = peer.localDescription;
+  adminSocket.send(
+    JSON.stringify({
+      type: "sendingOffer",
+      userName: adminCon,
+      friendName: friend,
+      content: offer,
+    })
+  );
+},[peer.localDescription,adminSocket,friend,adminCon]);
+
+useEffect(()=>{
+  peer.addEventListener('negotiationneeded',handleNeg);
+   return ()=>{
+    peer.removeEventListener('negotiationneeded',handleNeg);
+   }
+},[handleNeg,peer]);
+
+
+
 
   const handleJoin = () => {
     setFriend(nameRef.current.value.trim());
