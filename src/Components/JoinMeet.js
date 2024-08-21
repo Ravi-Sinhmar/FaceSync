@@ -139,7 +139,7 @@ const getMyVideo = useCallback(async()=>{
         const data = JSON.parse(event.data);
         console.log("message come not admin");
         if (data.type === "sendingOffer") {
-          console.log("state of wbeb",peer.connectionState);
+          
           const answer = await createAnswer(data.content);
           console.log("got offer from", data.userName);
           // Update state with offer data
@@ -185,6 +185,7 @@ const getMyVideo = useCallback(async()=>{
             })
           );
         } else if (data.type === "sendingAnswer") {
+          console.log("state of wbeb",peer.connectionState);
           await setRemoteAnswer(data.content);
           setNeg(true);
           console.log("got answer from", data.userName);
