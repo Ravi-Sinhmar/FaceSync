@@ -20,7 +20,7 @@ function JoinMeet() {
   const [neg, setNeg] = useState(false);
   const [negOffer, setNegOffer] = useState(null);
   const [negAnswer, setNegAnswer] = useState(null);
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState('ok');
 
   
 
@@ -171,7 +171,7 @@ const getMyVideo = useCallback(async()=>{
       );
       }
       };
-    if(count === 1){
+    if(count === 'ok'){
       userSocket.send(
         JSON.stringify({
           type: "askingOffer",
@@ -191,7 +191,7 @@ const getMyVideo = useCallback(async()=>{
         const data = JSON.parse(event.data);
         console.log("message come admin");
         if (data.type === "askingOffer") {
-          setCount(0);
+          setCount("nOk");
           setFriend(data.userName);
           console.log("Asking Offer by", data.userName);
           const offer = await createOffer();
