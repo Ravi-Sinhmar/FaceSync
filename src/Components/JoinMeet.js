@@ -185,7 +185,6 @@ const getMyVideo = useCallback(async()=>{
             })
           );
         } else if (data.type === "sendingAnswer") {
-         
           await setRemoteAnswer(data.content);
           setNeg(true);
           console.log("got answer from", data.userName);
@@ -206,6 +205,7 @@ const getMyVideo = useCallback(async()=>{
   },[getMyVideo]);
 
 const handleNeg = useCallback( async ()=>{
+   alert("nego need");
   const offer = await peer.createOffer();
   console.log(offer);
   adminSocket.send(
@@ -221,9 +221,7 @@ const handleNeg = useCallback( async ()=>{
 useEffect(()=>{
  
     peer.addEventListener('negotiationneeded',handleNeg);
-    peer.onconnectionstatechange = () => {
-      console.log('Connection state if event = negotiationneeded:', peer.connectionState);
-    };
+   
      return ()=>{
       peer.removeEventListener('negotiationneeded',handleNeg);
      }
