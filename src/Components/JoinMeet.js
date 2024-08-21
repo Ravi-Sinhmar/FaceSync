@@ -19,6 +19,9 @@ function JoinMeet() {
   const [myVideo, setMyVideo] = useState(null);
   const [neg, setNeg] = useState(false);
   const [negOffer, setNegOffer] = useState(null);
+  const [negAnswer, setNegAnswer] = useState(null);
+  const [count, setCount] = useState(1);
+
   
 
   // contexts
@@ -168,13 +171,16 @@ const getMyVideo = useCallback(async()=>{
       );
       }
       };
+    if(count === 1){
       userSocket.send(
         JSON.stringify({
           type: "askingOffer",
           userName: friend,
           friendName: adminCon,
         })
-      );
+      )
+
+    }
       userSocket.addEventListener("message", userListener);
       return () => {
         userSocket.removeEventListener("message", userListener);
@@ -185,6 +191,7 @@ const getMyVideo = useCallback(async()=>{
         const data = JSON.parse(event.data);
         console.log("message come admin");
         if (data.type === "askingOffer") {
+          setCount(0);
           setFriend(data.userName);
           console.log("Asking Offer by", data.userName);
           const offer = await createOffer();
@@ -204,10 +211,12 @@ const getMyVideo = useCallback(async()=>{
           // Update state with answer data
         }
         else if(data.type === 'negAnswer'){
+         
           alert("got negAnswer");
           await peer.setLocalDescription(data.content);
         }
       };
+ 
       adminSocket.addEventListener("message", adminListener);
       return () => {
         adminSocket.removeEventListener("message", adminListener);
