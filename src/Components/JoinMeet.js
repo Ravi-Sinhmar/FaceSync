@@ -153,11 +153,12 @@ const getMyVideo = useCallback(async()=>{
           );
         }
 
-      else if(data.type === 'negOffer'){
+      else if(data.type === "negOffer"){
+        alert("got neg offer");
       const answer = await peer.createAnswer(data.content);
       userSocket.send(
         JSON.stringify({
-          type: "negAnswer",
+          type: 'negAnswer',
           userName: friend,
           friendName: adminCon,
           content: answer,
@@ -204,6 +205,7 @@ const getMyVideo = useCallback(async()=>{
           // Update state with answer data
         }
         else if(data.type === 'negAnswer'){
+          alert("got negAnswer");
           await peer.setLocalDescription(data.content);
         }
       };
