@@ -17,6 +17,7 @@ function JoinMeet() {
   const [userSocket, setUserSocket] = useState(null);
   const [open, setOpen] = useState(false);
   const [myVideo, setMyVideo] = useState(null);
+  const [neg, setNeg] = useState(false);
   
 
   // contexts
@@ -182,9 +183,7 @@ const getMyVideo = useCallback(async()=>{
           );
         } else if (data.type === "sendingAnswer") {
           await setRemoteAnswer(data.content);
-          peer.onconnectionstatechange = () => {
-            console.log('Connection state if type = sendingAnser:', peer.connectionState);
-          };
+          setNeg(true);
           console.log("got answer from", data.userName);
            
           // Update state with answer data
@@ -203,9 +202,8 @@ const getMyVideo = useCallback(async()=>{
   },[getMyVideo]);
 
 const handleNeg = useCallback(()=>{
-  const offer = peer.localDescription;
+  const offer = peer.createOffer();
   console.log(offer);
-  console.log(offer.content);
   adminSocket.send(
     JSON.stringify({
       type: "sendingOffer",
@@ -214,17 +212,19 @@ const handleNeg = useCallback(()=>{
       content: offer,
     })
   );
-},[peer.localDescription,adminSocket,friend,adminCon]);
+},[adminSocket,friend,adminCon,peer]);
 
 useEffect(()=>{
-  peer.addEventListener('negotiationneeded',handleNeg);
-  peer.onconnectionstatechange = () => {
-    console.log('Connection state if event = negotiationneeded:', peer.connectionState);
-  };
-   return ()=>{
-    peer.removeEventListener('negotiationneeded',handleNeg);
-   }
-},[handleNeg,peer]);
+  if(neg){
+    peer.addEventListener('negotiationneeded',handleNeg);
+    peer.onconnectionstatechange = () => {
+      console.log('Connection state if event = negotiationneeded:', peer.connectionState);
+    };
+     return ()=>{
+      peer.removeEventListener('negotiationneeded',handleNeg);
+     }
+  }
+},[handleNeg,peer,neg]);
 
 
 
