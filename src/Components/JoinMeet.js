@@ -152,6 +152,18 @@ const getMyVideo = useCallback(async()=>{
             })
           );
         }
+
+      else if(data.type === 'negOffer'){
+      const answer = await peer.createAnswer(data.content);
+      userSocket.send(
+        JSON.stringify({
+          type: "negAnswer",
+          userName: friend,
+          friendName: adminCon,
+          content: answer,
+        })
+      );
+      }
       };
       userSocket.send(
         JSON.stringify({
@@ -191,6 +203,9 @@ const getMyVideo = useCallback(async()=>{
            
           // Update state with answer data
         }
+        else if(data.type === 'negAnswer'){
+          await peer.setLocalDescription(data.content);
+        }
       };
       adminSocket.addEventListener("message", adminListener);
       return () => {
@@ -210,7 +225,7 @@ const handleNeg = useCallback( async ()=>{
   console.log(offer);
   adminSocket.send(
     JSON.stringify({
-      type: "sendingOffer",
+      type: "negOffer",
       userName: adminCon,
       friendName: friend,
       content: offer,
@@ -219,9 +234,7 @@ const handleNeg = useCallback( async ()=>{
 },[adminSocket,friend,adminCon,peer]);
 
 useEffect(()=>{
- 
     peer.addEventListener('negotiationneeded',handleNeg);
-   
      return ()=>{
       peer.removeEventListener('negotiationneeded',handleNeg);
      }
