@@ -31,7 +31,7 @@ function JoinMeet() {
     setMeetingId(mId);
     if (adminName && meetingId) {
       const content = { adminName, meetingId };
-      fetch(`http://localhost:5000/seeMeet`, {
+      fetch(`https://facesyncbackend.onrender.com/seeMeet`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -63,7 +63,7 @@ function JoinMeet() {
     if (needWebSocket) {
       if (admin) {
         const newSocket = new WebSocket(
-          `ws://localhost:5000/?userName=${adminName}${meetingId}&name=${adminName}`
+          `wss://facesyncbackend.onrender.com/?userName=${adminName}${meetingId}&name=${adminName}`
         );
         setAdminSocket(newSocket);
       }
@@ -76,7 +76,7 @@ function JoinMeet() {
         alert("set");
         const cleanName = userName.toLowerCase().replace(/\s+/g, "");
         const newSocket = new WebSocket(
-          `ws://localhost:5000/?userName=${cleanName}${meetingId}&name=${userName}`
+          `wss://facesyncbackend.onrender.com/?userName=${cleanName}${meetingId}&name=${userName}`
         );
         setUserSocket(newSocket);
       }
