@@ -201,8 +201,8 @@ const getMyVideo = useCallback(async()=>{
      getMyVideo();
   },[getMyVideo]);
 
-const handleNeg = useCallback(()=>{
-  const offer = peer.createOffer();
+const handleNeg = useCallback( async ()=>{
+  const offer = await peer.createOffer();
   console.log(offer);
   adminSocket.send(
     JSON.stringify({
