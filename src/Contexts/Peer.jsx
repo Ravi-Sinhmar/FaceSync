@@ -42,7 +42,7 @@ return answer;
 
 // sendig Vidoe
 const sendVideo = async (video)=>{
-  const tracks = video.getTraacks();
+  const tracks = video.getTracks();
   for(const track of tracks){
     peer.addTrack(track,video);
   }
@@ -60,11 +60,11 @@ useEffect(()=>{
     peer.removeEventListener('track',handleSendVideo);
   }
 
-},[peer]);
+},[peer,handleSendVideo]);
 
 
   return (
-    <PeerContext.Provider value={{ peer , createOffer,createAnswer,setRemoteAnswer,sendVideo}}>
+    <PeerContext.Provider value={{ peer , createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream}}>
       {props.children}
     </PeerContext.Provider>
   );
