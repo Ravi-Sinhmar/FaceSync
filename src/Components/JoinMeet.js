@@ -166,6 +166,9 @@ const getMyVideo = useCallback(async()=>{
         const data = JSON.parse(event.data);
         console.log("message come admin");
         if (data.type === "askingOffer") {
+          peer.onconnectionstatechange = () => {
+            console.log('Connection state if type = askingOffer:', peer.connectionState);
+          };
           setFriend(data.userName);
           console.log("Asking Offer by", data.userName);
           const offer = await createOffer();
@@ -179,7 +182,11 @@ const getMyVideo = useCallback(async()=>{
           );
         } else if (data.type === "sendingAnswer") {
           await setRemoteAnswer(data.content);
+          peer.onconnectionstatechange = () => {
+            console.log('Connection state if type = sendingAnser:', peer.connectionState);
+          };
           console.log("got answer from", data.userName);
+           
           // Update state with answer data
         }
       };
@@ -188,7 +195,7 @@ const getMyVideo = useCallback(async()=>{
         adminSocket.removeEventListener("message", adminListener);
       };
     }
-  }, [admin,adminSocket,open,friend,createOffer,createAnswer,user,userSocket,adminCon,setFriend,setRemoteAnswer]);
+  }, [admin,adminSocket,open,friend,createOffer,createAnswer,user,userSocket,peer,adminCon,setFriend,setRemoteAnswer]);
 
 
   useEffect(()=>{
@@ -211,6 +218,9 @@ const handleNeg = useCallback(()=>{
 
 useEffect(()=>{
   peer.addEventListener('negotiationneeded',handleNeg);
+  peer.onconnectionstatechange = () => {
+    console.log('Connection state if event = negotiationneeded:', peer.connectionState);
+  };
    return ()=>{
     peer.removeEventListener('negotiationneeded',handleNeg);
    }
@@ -240,7 +250,6 @@ useEffect(()=>{
             </React.Fragment>
           ) : null}
         <ReactPlayer playing muted  className="w-20 aspect-square bg-blt" url={myVideo} ></ReactPlayer>
-      <button onClick={e => sendVideo(myVideo)}>Send My Vidoe</button>
         </div>
       ) : null}
     </React.Fragment>
