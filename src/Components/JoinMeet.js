@@ -18,6 +18,7 @@ function JoinMeet() {
   const [open, setOpen] = useState(false);
   const [myVideo, setMyVideo] = useState(null);
   const [neg, setNeg] = useState(false);
+  const [negOffer, setNegOffer] = useState(null);
   
 
   // contexts
@@ -155,6 +156,7 @@ const getMyVideo = useCallback(async()=>{
 
       else if(data.type === "negOffer"){
         alert("got neg offer");
+        setNegOffer(data.content);
       const answer = await peer.createAnswer(data.content);
       userSocket.send(
         JSON.stringify({
@@ -183,9 +185,6 @@ const getMyVideo = useCallback(async()=>{
         const data = JSON.parse(event.data);
         console.log("message come admin");
         if (data.type === "askingOffer") {
-          peer.onconnectionstatechange = () => {
-            console.log('Connection state if type = askingOffer:', peer.connectionState);
-          };
           setFriend(data.userName);
           console.log("Asking Offer by", data.userName);
           const offer = await createOffer();
@@ -214,7 +213,7 @@ const getMyVideo = useCallback(async()=>{
         adminSocket.removeEventListener("message", adminListener);
       };
     }
-  }, [admin,adminSocket,open,friend,createOffer,createAnswer,user,userSocket,peer,adminCon,setFriend,setRemoteAnswer]);
+  });
 
 
   useEffect(()=>{
