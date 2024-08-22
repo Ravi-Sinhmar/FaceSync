@@ -167,7 +167,7 @@ function JoinMeet() {
           
           alert("got neg offer");
           setNegOffer(data.content);
-          const answer = await peer.remoteDescription;
+          const answer = await peer.localDescription;
           userSocket.send(
             JSON.stringify({
               type: "negAnswer",
