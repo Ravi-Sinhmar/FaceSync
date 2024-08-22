@@ -130,6 +130,23 @@ function JoinMeet() {
     setMyVideo(video);
   }, []);
 
+  useEffect(()=>{
+    if(friend){
+    const timer = setTimeout(() => {
+        userSocket.send(
+          JSON.stringify({
+            type: "askingOffer",
+            userName: friend,
+            friendName: adminCon,
+          })
+        )
+    }, 3000);
+    return ()=>{
+      clearTimeout(timer);
+    }
+  }
+  },[adminCon,userSocket,friend]);
+
   useEffect(() => {
     if (open && user) {
       const userListener = async (event) => {
@@ -161,16 +178,6 @@ function JoinMeet() {
           );
         }
       };
-      if(first === "ok"){
-        userSocket.send(
-          JSON.stringify({
-            type: "askingOffer",
-            userName: friend,
-            friendName: adminCon,
-          })
-        )
-      }
-     
       userSocket.addEventListener("message", userListener);
       return () => {
         userSocket.removeEventListener("message", userListener);
@@ -208,23 +215,7 @@ function JoinMeet() {
         setFirst('no');
       };
     }
-   }
-  , [
-    admin,
-    adminSocket,
-    open,
-    friend,
-    createOffer,
-    createAnswer,
-    user,
-    userSocket,
-    peer,
-    adminCon,
-    setFriend,
-    setRemoteAnswer,
-    first
-  ]
-  );
+   });
 
   useEffect(() => {
     getMyVideo();
