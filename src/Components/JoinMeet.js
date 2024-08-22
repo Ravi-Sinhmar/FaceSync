@@ -147,6 +147,7 @@ function JoinMeet() {
             })
           );
         } else if (data.type === "negOffer") {
+          setFirst('not');
           alert("got neg offer");
           setNegOffer(data.content);
           const answer = await peer.createAnswer(data.content);
@@ -208,21 +209,21 @@ function JoinMeet() {
       };
     }
    }
-  // , [
-  //   admin,
-  //   adminSocket,
-  //   open,
-  //   friend,
-  //   createOffer,
-  //   createAnswer,
-  //   user,
-  //   userSocket,
-  //   peer,
-  //   adminCon,
-  //   setFriend,
-  //   setRemoteAnswer,
-  //   first
-  // ]
+  , [
+    admin,
+    adminSocket,
+    open,
+    friend,
+    createOffer,
+    createAnswer,
+    user,
+    userSocket,
+    peer,
+    adminCon,
+    setFriend,
+    setRemoteAnswer,
+    first
+  ]
   );
 
   useEffect(() => {
