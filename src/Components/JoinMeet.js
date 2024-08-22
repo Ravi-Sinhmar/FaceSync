@@ -209,7 +209,7 @@ function JoinMeet() {
           // Update state with answer data
         } else if (data.type === "negAnswer") {
           alert("got negAnswer");
-          await peer.setLocalDescription(data.content);
+          await peer.setRemoteDescription(data.content);
         }
       };
       adminSocket.addEventListener("message", adminListener);
