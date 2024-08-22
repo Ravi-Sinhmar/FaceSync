@@ -206,21 +206,23 @@ function JoinMeet() {
         adminSocket.removeEventListener("message", adminListener);
       };
     }
-  }, [
-    admin,
-    adminSocket,
-    open,
-    friend,
-    createOffer,
-    createAnswer,
-    user,
-    userSocket,
-    peer,
-    adminCon,
-    setFriend,
-    setRemoteAnswer,
-    first
-  ]);
+   }
+  // , [
+  //   admin,
+  //   adminSocket,
+  //   open,
+  //   friend,
+  //   createOffer,
+  //   createAnswer,
+  //   user,
+  //   userSocket,
+  //   peer,
+  //   adminCon,
+  //   setFriend,
+  //   setRemoteAnswer,
+  //   first
+  // ]
+  );
 
   useEffect(() => {
     getMyVideo();
