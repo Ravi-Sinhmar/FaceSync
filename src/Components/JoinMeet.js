@@ -19,11 +19,18 @@ function JoinMeet() {
   const [myVideo, setMyVideo] = useState(null);
   const [neg, setNeg] = useState(false);
   const [negOffer, setNegOffer] = useState(null);
-  
+  const [first, setFirst] = useState('ok');
 
   // contexts
   const { setFriend, adminCon, friend, setAdminCon } = useFriend();
-  const { peer, createOffer, createAnswer, setRemoteAnswer,sendVideo,remoteStream} = usePeer();
+  const {
+    peer,
+    createOffer,
+    createAnswer,
+    setRemoteAnswer,
+    sendVideo,
+    remoteStream,
+  } = usePeer();
 
   const seeMeet = useCallback(() => {
     const ad = searchParams.get("adminName");
@@ -45,12 +52,11 @@ function JoinMeet() {
         .then((data) => {
           if (data.status === "success") {
             setNeedWebSocket(true);
-            console.log(data.token);
+
             setAdmin(data.token);
             setUser(!data.token);
           }
           if (data.status === "fail") {
-            console.log("Status:fail in seeMeet()", data.message);
           }
         })
         .catch((err) => console.log(err));
@@ -60,8 +66,6 @@ function JoinMeet() {
   useEffect(() => {
     seeMeet();
   }, [seeMeet]);
-
-
 
   const startAdminSocket = useCallback(() => {
     if (needWebSocket) {
@@ -77,7 +81,6 @@ function JoinMeet() {
   const startUserSocket = useCallback(() => {
     if (needWebSocket) {
       if (user && friend) {
-        alert("set");
         const cleanName = userName.toLowerCase().replace(/\s+/g, "");
         const newSocket = new WebSocket(
           `wss://facesyncbackend.onrender.com/?userName=${cleanName}${meetingId}&name=${userName}`
@@ -95,31 +98,23 @@ function JoinMeet() {
     startAdminSocket();
   }, [startAdminSocket]);
 
-
   useEffect(() => {
     const handleSocketOpen = () => {
-      console.log("setOpen");
       setOpen(true);
     };
     if (admin && adminSocket !== null) {
       adminSocket.addEventListener("open", handleSocketOpen);
     }
     if (userSocket !== null && friend !== null) {
-      alert(userName);
-      alert(friend);
       userSocket.addEventListener("open", handleSocketOpen);
-     
     }
     return () => {
       if (adminSocket !== null) {
-        console.log("clear");
         adminSocket.removeEventListener("open", handleSocketOpen);
-        
       } else {
         return;
       }
       if (userSocket !== null) {
-        console.log("clear");
         userSocket.removeEventListener("open", handleSocketOpen);
       } else {
         return;
@@ -127,22 +122,21 @@ function JoinMeet() {
     };
   }, [adminSocket, userSocket, userName, admin, friend]);
 
-const getMyVideo = useCallback(async()=>{
-  const video = await navigator.mediaDevices.getUserMedia({video:true,audio:true});
-  setMyVideo(video);
-},[]);
+  const getMyVideo = useCallback(async () => {
+    const video = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+    setMyVideo(video);
+  }, []);
 
   useEffect(() => {
-    console.log("just enter in useeffect");
     if (open && user) {
-      console.log("open and user");
       const userListener = async (event) => {
         const data = JSON.parse(event.data);
-        console.log("message come not admin");
+
         if (data.type === "sendingOffer") {
-          
           const answer = await createAnswer(data.content);
-          console.log("got offer from", data.userName);
           // Update state with offer data
           userSocket.send(
             JSON.stringify({
@@ -152,41 +146,42 @@ const getMyVideo = useCallback(async()=>{
               content: answer,
             })
           );
+        } else if (data.type === "negOffer") {
+          alert("got neg offer");
+          setNegOffer(data.content);
+          const answer = await peer.createAnswer(data.content);
+          userSocket.send(
+            JSON.stringify({
+              type: "negAnswer",
+              userName: friend,
+              friendName: adminCon,
+              content: answer,
+            })
+          );
         }
-
-      else if(data.type === "negOffer"){
-        alert("got neg offer");
-        setNegOffer(data.content);
-      const answer = await peer.createAnswer(data.content);
-      userSocket.send(
-        JSON.stringify({
-          type: 'negAnswer',
-          userName: friend,
-          friendName: adminCon,
-          content: answer,
-        })
-      );
-      }
       };
-      userSocket.send(
-        JSON.stringify({
-          type: "askingOffer",
-          userName: friend,
-          friendName: adminCon,
-        })
-      )
+      if(first === "ok"){
+        userSocket.send(
+          JSON.stringify({
+            type: "askingOffer",
+            userName: friend,
+            friendName: adminCon,
+          })
+        )
+      }
+     
       userSocket.addEventListener("message", userListener);
       return () => {
         userSocket.removeEventListener("message", userListener);
+        setFirst('no');
       };
     } else if (open && admin) {
-      console.log("open and admin");
       const adminListener = async (event) => {
         const data = JSON.parse(event.data);
-        console.log("message come admin");
+
         if (data.type === "askingOffer") {
           setFriend(data.userName);
-          console.log("Asking Offer by", data.userName);
+
           const offer = await createOffer();
           adminSocket.send(
             JSON.stringify({
@@ -199,11 +194,9 @@ const getMyVideo = useCallback(async()=>{
         } else if (data.type === "sendingAnswer") {
           await setRemoteAnswer(data.content);
           setNeg(true);
-          console.log("got answer from", data.userName);
-           
+
           // Update state with answer data
-        }
-        else if(data.type === 'negAnswer'){
+        } else if (data.type === "negAnswer") {
           alert("got negAnswer");
           await peer.setLocalDescription(data.content);
         }
@@ -213,45 +206,52 @@ const getMyVideo = useCallback(async()=>{
         adminSocket.removeEventListener("message", adminListener);
       };
     }
-  }, [admin,adminSocket,open,friend,createOffer,createAnswer,user,userSocket,peer,adminCon,setFriend,setRemoteAnswer]);
+  }, [
+    admin,
+    adminSocket,
+    open,
+    friend,
+    createOffer,
+    createAnswer,
+    user,
+    userSocket,
+    peer,
+    adminCon,
+    setFriend,
+    setRemoteAnswer,
+    first
+  ]);
 
+  useEffect(() => {
+    getMyVideo();
+  }, [getMyVideo]);
 
-  useEffect(()=>{
-     getMyVideo();
-  },[getMyVideo]);
+  const handleNeg = useCallback(async () => {
+    alert("nego need");
+    const offer = await peer.createOffer();
 
-const handleNeg = useCallback( async ()=>{
-   alert("nego need");
-  const offer = await peer.createOffer();
-  console.log(offer);
-  adminSocket.send(
-    JSON.stringify({
-      type: "negOffer",
-      userName: adminCon,
-      friendName: friend,
-      content: offer,
-    })
-  );
-},[adminSocket,friend,adminCon,peer]);
+    adminSocket.send(
+      JSON.stringify({
+        type: "negOffer",
+        userName: adminCon,
+        friendName: friend,
+        content: offer,
+      })
+    );
+  }, [adminSocket, friend, adminCon, peer]);
 
-useEffect(()=>{
-    peer.addEventListener('negotiationneeded',handleNeg);
-     return ()=>{
-      peer.removeEventListener('negotiationneeded',handleNeg);
-     }
-  
-},[handleNeg,peer]);
+  useEffect(() => {
+    peer.addEventListener("negotiationneeded", handleNeg);
+    return () => {
+      peer.removeEventListener("negotiationneeded", handleNeg);
+    };
+  }, [handleNeg, peer]);
 
-useEffect(()=>{
-if(neg){
-  sendVideo(myVideo);
-}
-},[neg,sendVideo,myVideo]);
-
-
-
-
-
+  useEffect(() => {
+    if (neg) {
+      sendVideo(myVideo);
+    }
+  }, [neg, sendVideo, myVideo]);
 
   const handleJoin = () => {
     setFriend(nameRef.current.value.trim());
@@ -261,7 +261,12 @@ if(neg){
     <React.Fragment>
       {true ? (
         <div className="flex flex-col justify-center items-center h-full w-full ">
-         <ReactPlayer playing muted className="w-20 aspect-square bg-blf" url={remoteStream}></ReactPlayer>
+          <ReactPlayer
+            playing
+            muted
+            className="w-20 aspect-square bg-blf"
+            url={remoteStream}
+          ></ReactPlayer>
           <br />
           {user && !open ? (
             <React.Fragment>
@@ -273,7 +278,12 @@ if(neg){
               <button onClick={handleJoin}>JOIN</button>
             </React.Fragment>
           ) : null}
-        <ReactPlayer playing muted  className="w-20 aspect-square bg-blt" url={myVideo} ></ReactPlayer>
+          <ReactPlayer
+            playing
+            muted
+            className="w-20 aspect-square bg-blt"
+            url={myVideo}
+          ></ReactPlayer>
         </div>
       ) : null}
     </React.Fragment>
