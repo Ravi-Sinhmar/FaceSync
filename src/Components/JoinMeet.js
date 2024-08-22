@@ -204,6 +204,7 @@ function JoinMeet() {
       adminSocket.addEventListener("message", adminListener);
       return () => {
         adminSocket.removeEventListener("message", adminListener);
+        setFirst('no');
       };
     }
    }
