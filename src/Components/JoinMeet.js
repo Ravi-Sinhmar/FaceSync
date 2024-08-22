@@ -164,7 +164,7 @@ function JoinMeet() {
             })
           );
         } else if (data.type === "negOffer") {
-          setFirst('not');
+          
           alert("got neg offer");
           setNegOffer(data.content);
           const answer = await peer.createAnswer(data.content);
@@ -176,6 +176,9 @@ function JoinMeet() {
               content: answer,
             })
           );
+
+          alert("i wish sent");
+          setFirst('not');
         }
       };
       userSocket.addEventListener("message", userListener);
