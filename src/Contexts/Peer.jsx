@@ -53,8 +53,7 @@ const sendVideo = async (video)=>{
 }
 
 const handleSendVideo = useCallback(async(event)=>{
-
-  const video = event.streams;
+  const video = await event.streams;
   console.log("GOT TRACKS!!",video[1]);
 
   setRemoteStream(video[1]);
