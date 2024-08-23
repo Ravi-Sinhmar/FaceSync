@@ -153,7 +153,6 @@ function JoinMeet() {
         const data = JSON.parse(event.data);
 
         if (data.type === "sendingOffer") {
-         sendVideo(myVideo);
           const answer = await createAnswer(data.content);
           // Update state with offer data
           userSocket.send(
@@ -168,7 +167,7 @@ function JoinMeet() {
           
           alert("got neg offer");
           setNegOffer(data.content);
-          const answer = await createAnswer(data.content);
+          const answer = await createAnswer();
           userSocket.send(
             JSON.stringify({
               type: "negAnswer",
@@ -210,7 +209,7 @@ function JoinMeet() {
           // Update state with answer data
         } else if (data.type === "negAnswer") {
           alert("got negAnswer");
-          await peer.setRemoteDescription(data.content);
+          await peer.setLocalDescription(data.content);
         }
       };
       adminSocket.addEventListener("message", adminListener);
@@ -246,7 +245,11 @@ function JoinMeet() {
     };
   }, [handleNeg, peer]);
 
-
+  useEffect(() => {
+    if (neg) {
+      sendVideo(myVideo);
+    }
+  }, [neg, sendVideo, myVideo]);
 
   const handleJoin = () => {
     setFriend(nameRef.current.value.trim());
