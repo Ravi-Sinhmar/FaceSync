@@ -153,6 +153,7 @@ function JoinMeet() {
         const data = JSON.parse(event.data);
 
         if (data.type === "sendingOffer") {
+         sendVideo(myVideo);
           const answer = await createAnswer(data.content);
           // Update state with offer data
           userSocket.send(
@@ -245,11 +246,7 @@ function JoinMeet() {
     };
   }, [handleNeg, peer]);
 
-  useEffect(() => {
-    if (neg) {
-      sendVideo(myVideo);
-    }
-  }, [neg, sendVideo, myVideo]);
+
 
   const handleJoin = () => {
     setFriend(nameRef.current.value.trim());

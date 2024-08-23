@@ -42,30 +42,21 @@ return answer;
  await peer.setRemoteDescription(answer);
   }
 
-
 // sendig Vidoe
-const sendVideo = async (video)=>{
+const sendVideo = useCallback((video)=>{
   const tracks = video.getTracks();
   for(const track of tracks){
     peer.addTrack(track,video);
   }
+},[peer]);
 
-}
-
-const handleSendVideo = useCallback(async(event)=>{
-  const video = await event.streams;
-  console.log("GOT TRACKS!!",video[1]);
-
-  setRemoteStream(video[1]);
-},[])
-
-useEffect(()=>{
-  peer.addEventListener('track',handleSendVideo);
-  return ()=>{
-    peer.removeEventListener('track',handleSendVideo);
-  }
-
-},[peer,handleSendVideo]);
+useEffect(() => {
+  peer.addEventListener("track", async (ev) => {
+    const remoteStream = ev.streams;
+    console.log("GOT TRACKS!!");
+    setRemoteStream(remoteStream[0]);
+  });
+}, []);
 
 
   return (
