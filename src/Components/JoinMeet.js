@@ -130,9 +130,8 @@ function JoinMeet() {
     setMyVideo(video);
   }, []);
 
-
   useEffect(()=>{
-    if(friend && open && user){
+    if(friend){
     const timer = setTimeout(() => {
         userSocket.send(
           JSON.stringify({
@@ -146,7 +145,7 @@ function JoinMeet() {
       clearTimeout(timer);
     }
   }
-  },[adminCon, userSocket, friend, open, user]);
+  },[adminCon,userSocket,friend]);
 
   useEffect(() => {
     if (open && user) {
@@ -178,7 +177,7 @@ function JoinMeet() {
             })
           );
 
-          alert("i wish");
+          alert("i wish sent");
           setFirst('not');
         }
       };
@@ -210,7 +209,7 @@ function JoinMeet() {
           // Update state with answer data
         } else if (data.type === "negAnswer") {
           alert("got negAnswer");
-          await setRemoteAnswer(data.content);
+          await peer.setRemoteDescription(data.content);
         }
       };
       adminSocket.addEventListener("message", adminListener);
@@ -227,7 +226,7 @@ function JoinMeet() {
 
   const handleNeg = useCallback(async () => {
     alert("nego need");
-    const offer = await createOffer();
+    const offer = await peer.createOffer();
 
     adminSocket.send(
       JSON.stringify({
@@ -237,7 +236,7 @@ function JoinMeet() {
         content: offer,
       })
     );
-  }, [adminSocket, friend, adminCon, createOffer]);
+  }, [adminSocket, friend, adminCon, peer]);
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);

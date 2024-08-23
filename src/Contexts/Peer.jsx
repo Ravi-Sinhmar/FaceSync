@@ -32,7 +32,7 @@ function PeerProvider(props){
     console.log("state of wbeb setremote offer",peer.connectionState);
 
     peer.setRemoteDescription(offer);
-const answer = await peer.createAnswer(offer);
+const answer = await peer.createAnswer();
 peer.setLocalDescription(answer);
 return answer;
   };
@@ -44,17 +44,20 @@ return answer;
 
 
 // sendig Vidoe
-const sendVideo = (video)=>{
+const sendVideo = async (video)=>{
   const tracks = video.getTracks();
   for(const track of tracks){
     peer.addTrack(track,video);
   }
+
 }
 
-const handleSendVideo = useCallback((event)=>{
-  const video =  event.streams;
-  console.log("GOT TRACKS!!",video[0]);
-  setRemoteStream(video[0]);
+const handleSendVideo = useCallback(async(event)=>{
+
+  const video = event.streams;
+  console.log("GOT TRACKS!!",video[1]);
+
+  setRemoteStream(video[1]);
 },[])
 
 useEffect(()=>{
