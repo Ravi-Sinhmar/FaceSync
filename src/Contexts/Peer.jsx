@@ -32,7 +32,7 @@ function PeerProvider(props){
     console.log("state of wbeb setremote offer",peer.connectionState);
 
     peer.setRemoteDescription(offer);
-const answer = await peer.createAnswer();
+const answer = await peer.createAnswer(offer);
 peer.setLocalDescription(answer);
 return answer;
   };
