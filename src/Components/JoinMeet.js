@@ -167,7 +167,7 @@ function JoinMeet() {
           
           alert("got neg offer");
           setNegOffer(data.content);
-          const answer = await createAnswer();
+          const answer = await createAnswer(data.content);
           userSocket.send(
             JSON.stringify({
               type: "negAnswer",
@@ -177,7 +177,7 @@ function JoinMeet() {
             })
           );
 
-          alert("i wish sent");
+          alert("i wish");
           setFirst('not');
         }
       };
