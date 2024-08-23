@@ -130,8 +130,9 @@ function JoinMeet() {
     setMyVideo(video);
   }, []);
 
+
   useEffect(()=>{
-    if(friend){
+    if(friend && open && user){
     const timer = setTimeout(() => {
         userSocket.send(
           JSON.stringify({
@@ -145,7 +146,7 @@ function JoinMeet() {
       clearTimeout(timer);
     }
   }
-  },[adminCon,userSocket,friend]);
+  },[adminCon, userSocket, friend, open, user]);
 
   useEffect(() => {
     if (open && user) {
@@ -226,7 +227,7 @@ function JoinMeet() {
 
   const handleNeg = useCallback(async () => {
     alert("nego need");
-    const offer = await peer.createOffer();
+    const offer = await createOffer();
 
     adminSocket.send(
       JSON.stringify({
@@ -236,7 +237,7 @@ function JoinMeet() {
         content: offer,
       })
     );
-  }, [adminSocket, friend, adminCon, peer]);
+  }, [adminSocket, friend, adminCon, createOffer]);
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);

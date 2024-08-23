@@ -24,7 +24,7 @@ function PeerProvider(props){
   // create offer
   const createOffer = async()=>{
     const offer = peer.createOffer();
-    await peer.setLocalDescription(offer);
+    await peer.setLocalDescription(new RTCSessionDescription(offer));
     return offer;
   };
 
@@ -33,13 +33,13 @@ function PeerProvider(props){
 
     peer.setRemoteDescription(offer);
 const answer = await peer.createAnswer();
-peer.setLocalDescription(answer);
+peer.setLocalDescription(new RTCSessionDescription(answer));
 return answer;
   };
 
   const setRemoteAnswer = async(answer)=>{
     console.log("state of wbeb setremote answer",peer.connectionState);
- await peer.setRemoteDescription(answer);
+ await peer.setRemoteDescription(new RTCSessionDescription(answer));
   }
 
 
