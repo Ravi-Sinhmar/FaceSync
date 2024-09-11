@@ -133,7 +133,7 @@ function JoinMeet() {
   }, []);
 
   useEffect(()=>{
-    if(friend){
+    if(friend && first){
     const timer = setTimeout(() => {
         userSocket.send(
           JSON.stringify({
