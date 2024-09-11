@@ -547,28 +547,8 @@ video {
   --tw-contain-style:  ;
 }
 
-.mb-20{
-  margin-bottom: 5rem;
-}
-
-.ml-36{
-  margin-left: 9rem;
-}
-
 .mt-3{
   margin-top: 0.75rem;
-}
-
-.mb-60{
-  margin-bottom: 15rem;
-}
-
-.ml-60{
-  margin-left: 15rem;
-}
-
-.mt-60{
-  margin-top: 15rem;
 }
 
 .flex{
@@ -577,10 +557,6 @@ video {
 
 .aspect-square{
   aspect-ratio: 1 / 1;
-}
-
-.h-60{
-  height: 15rem;
 }
 
 .h-full{
@@ -601,10 +577,6 @@ video {
 
 .w-full{
   width: 100%;
-}
-
-.w-60{
-  width: 15rem;
 }
 
 .flex-col{

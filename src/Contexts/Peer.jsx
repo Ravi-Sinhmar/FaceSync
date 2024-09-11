@@ -29,8 +29,7 @@ function PeerProvider(props){
   };
 
   const createAnswer  = async (offer)=>{
-    console.log("state of wbeb setremote offer",peer.connectionState);
-
+  console.log("state of wbeb setremote offer",peer.connectionState);
     peer.setRemoteDescription(offer);
 const answer = await peer.createAnswer();
 peer.setLocalDescription(answer);
@@ -38,6 +37,7 @@ return answer;
   };
 
   const setRemoteAnswer = async(answer)=>{
+    console.log(answer);
     console.log("state of wbeb setremote answer",peer.connectionState);
  await peer.setRemoteDescription(answer);
   }

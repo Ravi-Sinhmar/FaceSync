@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { useFriend } from "./../Contexts/Friend";
 import { usePeer } from "./../Contexts/Peer";
 
-function JoinMeet() {
+function JoinMeet() {  
   const nameRef = useRef();
   const [adminName, setAdminName] = useState(null);
   const [userName, setUserName] = useState(null);
@@ -19,7 +19,7 @@ function JoinMeet() {
   const [myVideo, setMyVideo] = useState(null);
   const [neg, setNeg] = useState(false);
   const [negOffer, setNegOffer] = useState(null);
-  const [first, setFirst] = useState('ok');
+  const [first, setFirst] = useState(true);
 
   // contexts
   const { setFriend, adminCon, friend, setAdminCon } = useFriend();
@@ -70,6 +70,7 @@ function JoinMeet() {
   const startAdminSocket = useCallback(() => {
     if (needWebSocket) {
       if (admin) {
+        setFirst(false);
         const newSocket = new WebSocket(
           `wss://facesyncbackend.onrender.com/?userName=${adminName}${meetingId}&name=${adminName}`
         );
@@ -96,6 +97,7 @@ function JoinMeet() {
 
   useEffect(() => {
     startAdminSocket();
+
   }, [startAdminSocket]);
 
   useEffect(() => {
@@ -178,13 +180,13 @@ function JoinMeet() {
           );
 
           alert("i wish sent");
-          setFirst('not');
+         
         }
       };
       userSocket.addEventListener("message", userListener);
       return () => {
         userSocket.removeEventListener("message", userListener);
-        setFirst('no');
+      
       };
     } else if (open && admin) {
       const adminListener = async (event) => {
@@ -215,7 +217,7 @@ function JoinMeet() {
       adminSocket.addEventListener("message", adminListener);
       return () => {
         adminSocket.removeEventListener("message", adminListener);
-        setFirst('no');
+        
       };
     }
    });
