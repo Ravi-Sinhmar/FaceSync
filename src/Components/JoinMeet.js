@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { useFriend } from "./../Contexts/Friend";
 import { usePeer } from "./../Contexts/Peer";
 
-function JoinMeet() {  
+function JoinMeet() {
   const nameRef = useRef();
   const [adminName, setAdminName] = useState(null);
   const [userName, setUserName] = useState(null);
@@ -52,7 +52,6 @@ function JoinMeet() {
         .then((data) => {
           if (data.status === "success") {
             setNeedWebSocket(true);
-
             setAdmin(data.token);
             setUser(!data.token);
           }
@@ -65,7 +64,7 @@ function JoinMeet() {
 
   useEffect(() => {
     seeMeet();
-  }, [seeMeet]);
+  }, []);
 
   const startAdminSocket = useCallback(() => {
     if (needWebSocket) {
@@ -97,32 +96,32 @@ function JoinMeet() {
 
   useEffect(() => {
     startAdminSocket();
-
   }, [startAdminSocket]);
 
-  useEffect(() => {
-    const handleSocketOpen = () => {
-      setOpen(true);
-    };
-    if (admin && adminSocket !== null) {
-      adminSocket.addEventListener("open", handleSocketOpen);
-    }
-    if (userSocket !== null && friend !== null) {
-      userSocket.addEventListener("open", handleSocketOpen);
-    }
-    return () => {
-      if (adminSocket !== null) {
-        adminSocket.removeEventListener("open", handleSocketOpen);
-      } else {
-        return;
-      }
-      if (userSocket !== null) {
-        userSocket.removeEventListener("open", handleSocketOpen);
-      } else {
-        return;
-      }
-    };
-  }, [adminSocket, userSocket, userName, admin, friend]);
+  // const handleSocketOpen = () => {
+  //   setOpen(true);
+  // };
+
+  // useEffect(() => {
+  //   if (admin && adminSocket !== null) {
+  //     adminSocket.addEventListener("open", handleSocketOpen);
+  //   }
+  //   if (userSocket !== null && friend !== null) {
+  //     userSocket.addEventListener("open", handleSocketOpen);
+  //   }
+  //   return () => {
+  //     if (adminSocket !== null) {
+  //       adminSocket.removeEventListener("open", handleSocketOpen);
+  //     } else {
+  //       return;
+  //     }
+  //     if (userSocket !== null) {
+  //       userSocket.removeEventListener("open", handleSocketOpen);
+  //     } else {
+  //       return;
+  //     }
+  //   };
+  // }, [adminSocket, userSocket, userName, admin, friend]);
 
   const getMyVideo = useCallback(async () => {
     const video = await navigator.mediaDevices.getUserMedia({
@@ -132,22 +131,22 @@ function JoinMeet() {
     setMyVideo(video);
   }, []);
 
-  useEffect(()=>{
-    if(friend && first){
-    const timer = setTimeout(() => {
+  useEffect(() => {
+    if (friend && first) {
+      const timer = setTimeout(() => {
         userSocket.send(
           JSON.stringify({
             type: "askingOffer",
             userName: friend,
             friendName: adminCon,
           })
-        )
-    }, 3000);
-    return ()=>{
-      clearTimeout(timer);
+        );
+      }, 3000);
+      return () => {
+        clearTimeout(timer);
+      };
     }
-  }
-  },[adminCon,userSocket,friend]);
+  }, [adminCon, userSocket, friend]);
 
   useEffect(() => {
     if (open && user) {
@@ -166,7 +165,6 @@ function JoinMeet() {
             })
           );
         } else if (data.type === "negOffer") {
-          
           alert("got neg offer");
           setNegOffer(data.content);
           const answer = await createAnswer(data.content);
@@ -180,13 +178,11 @@ function JoinMeet() {
           );
 
           alert("i wish sent");
-         
         }
       };
       userSocket.addEventListener("message", userListener);
       return () => {
         userSocket.removeEventListener("message", userListener);
-      
       };
     } else if (open && admin) {
       const adminListener = async (event) => {
@@ -217,10 +213,9 @@ function JoinMeet() {
       adminSocket.addEventListener("message", adminListener);
       return () => {
         adminSocket.removeEventListener("message", adminListener);
-        
       };
     }
-   });
+  });
 
   useEffect(() => {
     getMyVideo();

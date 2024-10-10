@@ -39,11 +39,6 @@ if(data.status === 'success'){
   navigate(`/meeting/?adminName=${cleanName}&meetingId=${meetId}`)}
     }).catch(err=>console.log(err));
 },[adminName,navigate]);
-
-
-
-
-
   return (
     <React.Fragment>
     <div className=" flex flex-col h-svh w-full items-center justify-center gap-16  bg-blm ">
@@ -76,5 +71,3 @@ export default StartMeet;
 
  
    
- 
-
