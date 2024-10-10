@@ -149,7 +149,7 @@ function JoinMeet() {
   }, [adminCon, userSocket, friend]);
 
   useEffect(() => {
-    if (open && user) {
+    if (user) {
       const userListener = async (event) => {
         const data = JSON.parse(event.data);
 
@@ -184,7 +184,7 @@ function JoinMeet() {
       return () => {
         userSocket.removeEventListener("message", userListener);
       };
-    } else if (open && admin) {
+    } else if ( admin) {
       const adminListener = async (event) => {
         const data = JSON.parse(event.data);
 
@@ -263,7 +263,7 @@ function JoinMeet() {
             url={remoteStream}
           ></ReactPlayer>
           <br />
-          {user && !open ? (
+          {user ? (
             <React.Fragment>
               <input
                 ref={nameRef}
