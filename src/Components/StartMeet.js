@@ -1,17 +1,11 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { useFriend } from "./../Contexts/Friend";
 import { useNavigate } from 'react-router-dom';
 import { RandomString } from "../JavaScriptFun/RandomString";
-
-
-
- 
-
 function StartMeet() {
  const [isClick, setIsClick] = useState(false);
  const [adminName, setAdminName] = useState('');
- const [meetingId, setMeetingId] = useState('');
- const nameRef= useRef();
+
  const navigate = useNavigate();
  const {setAdminCon } = useFriend();
 
@@ -22,11 +16,16 @@ const startMeet = useCallback(()=>{
   setIsClick(true);
 },[]);
 
+const handleInputChange = (event) => {
+  setAdminName(event.target.value);
+  setAdminCon(event.target.value);
+};
+
 const saveMeet = useCallback(()=>{
   console.log("saveMeetCallback");
-  if(adminName !== '' && meetingId !== ''){
-    console.log("fetch request sent",adminName,meetingId);
-    const content = {adminName:adminName,meetingId:meetingId}
+  const meetId = RandomString(6);
+    console.log("fetch request sent",adminName,meetId);
+    const content = {adminName:adminName,meetingId:meetId}
     fetch(`https://facesyncbackend.onrender.com/saveMeet`, {
       method: "POST",
       credentials: 'include',
@@ -37,24 +36,14 @@ const saveMeet = useCallback(()=>{
     }).then(data=>data.json()).then((data)=>{
 if(data.status === 'success'){
   const cleanName = adminName.toLowerCase().replace(/\s+/g, "");
-  navigate(`/meeting/?adminName=${cleanName}&meetingId=${meetingId}`)}
+  navigate(`/meeting/?adminName=${cleanName}&meetingId=${meetId}`)}
     }).catch(err=>console.log(err));
-  }
-},[adminName,meetingId,navigate]);
-
-useEffect(()=>{
-saveMeet();
-},[saveMeet]);
+},[adminName,navigate]);
 
 
-const sendMeet = useCallback(()=>{
-  console.log("sendMeetCallback");
-  console.log("Send Meet",nameRef.current.value.trim())
-  setAdminName(nameRef.current.value.trim());
-  setAdminCon(nameRef.current.value.trim());
-  const rs = RandomString(6);
-  setMeetingId(rs);
-},[nameRef,setAdminCon]);
+
+
+
   return (
     <React.Fragment>
     <div className=" flex flex-col h-svh w-full items-center justify-center gap-16  bg-blm ">
@@ -71,8 +60,9 @@ const sendMeet = useCallback(()=>{
       </div>
       {isClick && (
         <React.Fragment>
-        <input className="border border-blt rounded-md py-2 bg-blg" ref={nameRef}  type="text" />
-        <button onClick={sendMeet}>Continue</button>
+        <input value={adminName}
+        onChange={handleInputChange} className="border border-blt rounded-md py-2 bg-blg"  type="text" />
+        <button onClick={saveMeet}>Continue</button>
         </React.Fragment>
       )}
       {!isClick && (

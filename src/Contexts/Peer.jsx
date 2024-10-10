@@ -37,7 +37,6 @@ return answer;
   };
 
   const setRemoteAnswer = async(answer)=>{
-    console.log(answer);
     console.log("state of wbeb setremote answer",peer.connectionState);
  await peer.setRemoteDescription(answer);
   }
