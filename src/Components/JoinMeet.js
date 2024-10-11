@@ -222,7 +222,7 @@ return () => {
   },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer]);
 
   const handleNeg = useCallback(async () => {
-    alert("nego need");
+    console.log("nego need");
     const wsMessage = {
       admin:true,
       cleanUserName: adminCon,
