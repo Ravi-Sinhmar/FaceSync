@@ -8,6 +8,7 @@ function JoinMeet() {
   const nameRef = useRef();
   const [adminName, setAdminName] = useState(null);
   const [userName, setUserName] = useState(null);
+  const [fullName, setFullName] = useState(null);
   const [meetingId, setMeetingId] = useState(null);
   const [needWebSocket, setNeedWebSocket] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,7 +33,10 @@ function JoinMeet() {
   } = usePeer();
 
   const handleInputChange = (event) => {
-    setUserName(event.target.value);
+    let uName = event.target.value;
+    setFullName(uName);
+    uName = uName.toLowerCase().replace(/\s+/g, "");
+    setUserName(uName);
   };
 
 
@@ -73,7 +77,7 @@ function JoinMeet() {
 const startAdminSocket = useCallback(() => {
       if (needWebSocket && admin) {
         const newSocket = new WebSocket(
-          `wss://facesyncbackend.onrender.com/?userName=${adminName}${meetingId}&name=${adminName}`
+          `wss://facesyncbackend.onrender.com/?fullMeetId=${adminName}${meetingId}&deciceName=${adminName}`
         );
         setAdminSocket(newSocket);
       }
@@ -83,7 +87,7 @@ const startAdminSocket = useCallback(() => {
     if (needWebSocket && user && joined) {
         const cleanName = userName.toLowerCase().replace(/\s+/g, "");
         const newSocket = new WebSocket(
-          `wss://facesyncbackend.onrender.com/?userName=${cleanName}${meetingId}&name=${userName}`
+          `wss://facesyncbackend.onrender.com/?fullMeetId=${cleanName}${meetingId}&deviceName=${userName}`
         );
         setUserSocket(newSocket);
     }
@@ -156,9 +160,12 @@ if(adminSocketStatus){
  
   adminSocket.send(
     JSON.stringify({
-      type: "askingOffer",
-      userName: adminCon,
-      friendName: "need",
+      admin:true,
+      type: "adminOn",
+      cleanUserName: adminCon,
+      fullUserName:"updateMe",
+      cleanFriendName : "updateMe",
+      fullFiendName:"updateMe",
     })
   );
    // Listening for messages 
@@ -172,9 +179,12 @@ if(adminSocketStatus){
 if(userSocketStatus && joined){
   userSocket.send(
     JSON.stringify({
-      type: "askingOffer",
-      userName: userName,
-      friendName: adminCon,
+      admin:false,
+      type: "userON",
+      cleanUserName: userName,
+      fullUserName:fullName,
+      cleanFriendName : adminCon,
+      fullFiendName:"updateMe",
     })
   );
   userSocket.addEventListener("message", userMessageListener);
@@ -184,7 +194,7 @@ return () => {
 }
 
 
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName]);
 
 
   return (
