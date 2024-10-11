@@ -13,6 +13,7 @@ function JoinMeet() {
   const [handShake, setHandShake] = useState(false);
   const [needWebSocket, setNeedWebSocket] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [finalOffer, setFinalOffer] = useState(null);
   const [admin, setAdmin] = useState(false);
   const [user, setUser] = useState(false);
   const [joined, setJoined] = useState(false);
@@ -158,6 +159,7 @@ if(adminSocketStatus){
     // if Someone Reset or Refresh or Firsttime going on link
  if (data.type === "userOn" || data.type === "askingOffer") {
   const offer = await createOffer();
+  setFinalOffer(offer);
   adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingOffer",content: offer}));
  };
 //  Getting Anser
@@ -198,6 +200,11 @@ if(userSocketStatus && joined){
       const answer = await createAnswer(data.content);
       userSocket.send(JSON.stringify({ ...wsMessage,type:"sendingAnswer", content: answer}));
        };
+
+         // If neg need
+     if (data.type === "negNeed") {
+      await setRemoteAnswer(data.content);
+       };
             };
 
   userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
@@ -210,16 +217,16 @@ return () => {
 
   const handleNeg = useCallback(async () => {
     alert("nego need");
-    // const offer = await peer.createOffer();
-    // adminSocket.send(
-    //   JSON.stringify({
-    //     type: "negOffer",
-    //     userName: adminCon,
-    //     friendName: friend,
-    //     content: offer,
-    //   })
-    // );
-  }, []);
+    const wsMessage = {
+      admin:true,
+      cleanUserName: adminCon,
+      fullUserName:"updateMe",
+      cleanFriendName : "updateMe",
+      fullFiendName:"updateMe",
+    };
+    const answer = await peer.createAnswer(finalOffer);
+    adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: answer}));
+  }, [peer,adminCon,adminSocket,finalOffer]);
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
