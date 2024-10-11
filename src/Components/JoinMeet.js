@@ -194,20 +194,20 @@ if(userSocketStatus && joined){
     const data = JSON.parse(event.data);
     // If admin Reset or refresh
     if (data.type === "adminOn") {
-    adminSocket.send(JSON.stringify({ ...wsMessage,type:"askingOffer"}));
+    userSocket.send(JSON.stringify({ ...wsMessage,type:"askingOffer"}));
      };
 
      // If getting offer
      if (data.type === "sendingOffer") {
       const answer = await createAnswer(data.content);
-      adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingAnswer", content: answer}));
+      userSocket.send(JSON.stringify({ ...wsMessage,type:"sendingAnswer", content: answer}));
        };
 
 
 
             };
 
-  adminSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
+  userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
 
  
   userSocket.addEventListener("message", userMessageListener);
