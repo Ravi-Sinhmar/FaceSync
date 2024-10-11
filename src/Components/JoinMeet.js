@@ -10,7 +10,7 @@ function JoinMeet() {
   const [userName, setUserName] = useState(null);
   const [fullName, setFullName] = useState(null);
   const [meetingId, setMeetingId] = useState(null);
-  const [handShake, setHandShake] = useState(false);
+  const [handShake, setHandShake] = useState(true);
   const [needWebSocket, setNeedWebSocket] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [finalOffer, setFinalOffer] = useState(null);
@@ -164,9 +164,7 @@ if(adminSocketStatus){
  };
 //  Getting Anser
  if (data.type === "sendingAnswer") {
-   const hs = await setRemoteAnswer(data.content);
-   setHandShake(hs);
-  
+  await setRemoteAnswer(data.content);
  };
 
  //  neg Anser
