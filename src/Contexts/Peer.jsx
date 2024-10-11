@@ -53,7 +53,6 @@ const sendVideo = async (video)=>{
 }
 
 const handleSendVideo = useCallback(async(event)=>{
-
   const video =await event.streams;
   console.log("GOT TRACKS!!",video[0]);
 
@@ -64,7 +63,7 @@ useEffect(()=>{
   peer.addEventListener('track',handleSendVideo);
   return ()=>{
     peer.removeEventListener('track',handleSendVideo);
-    peer.close();
+    
   }
 
 },[peer,handleSendVideo]);
