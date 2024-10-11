@@ -77,7 +77,7 @@ function JoinMeet() {
 const startAdminSocket = useCallback(() => {
       if (needWebSocket && admin) {
         const newSocket = new WebSocket(
-          `wss://facesyncbackend.onrender.com/?fullMeetId=${adminName}${meetingId}&deciceName=${adminName}`
+          `wss://facesyncbackend.onrender.com/?fullMeetId=${adminName}${meetingId}&deviceName=${adminName}`
         );
         setAdminSocket(newSocket);
       }
