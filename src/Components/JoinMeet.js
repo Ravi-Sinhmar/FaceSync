@@ -246,6 +246,8 @@ return () => {
       {true ? (
         <div className="flex flex-col justify-center items-center h-full w-full ">
           <ReactPlayer
+           playing
+           muted
             className="w-20 aspect-square bg-blf"
             url={remoteStream}
           ></ReactPlayer>
