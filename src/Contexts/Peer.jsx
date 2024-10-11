@@ -1,80 +1,76 @@
-import React, { useMemo,useEffect,useState, useCallback } from "react";
+import React, { useMemo, useEffect, useState, useCallback } from "react";
+
 const PeerContext = React.createContext(null);
-export const usePeer = () =>{
+
+export const usePeer = () => {
   return React.useContext(PeerContext);
-}
+};
 
-function PeerProvider(props){
-  const [remoteStream,setRemoteStream] = useState();
-  const peer = useMemo(
-    () =>
-      new RTCPeerConnection({
-        iceServers: [
-          {
-            urls: [
-              "stun:stun.l.google.com:19302",
-              "stun:global.stun.twilio.com:3478",
-            ],
-          },
-        ],
-      }),
-    []
-  );
+function PeerProvider(props) {
+  const [remoteStream, setRemoteStream] = useState();
+  
+  const peer = useMemo(() => 
+    new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: [
+            "stun:stun.l.google.com:19302",
+            "stun:global.stun.twilio.com:3478",
+          ],
+        },
+      ],
+    }), 
+  []);
 
-  // create offer
-  const createOffer = async()=>{
-    const offer = peer.createOffer();
+  const createOffer = async () => {
+    const offer = await peer.createOffer();
     await peer.setLocalDescription(offer);
     return offer;
   };
 
-  const createAnswer  = async (offer)=>{
-  console.log("state of wbeb setremote offer",peer.connectionState);
-    peer.setRemoteDescription(offer);
-const answer = await peer.createAnswer();
-await peer.setLocalDescription(answer);
-return answer;
+  const createAnswer = async (offer) => {
+    await peer.setRemoteDescription(offer);
+    const answer = await peer.createAnswer();
+    await peer.setLocalDescription(answer);
+    return answer;
   };
 
-  const setRemoteAnswer = async(answer)=>{
-    console.log("state of wbeb setremote answer",peer.connectionState);
- await peer.setRemoteDescription(answer);
-return true;
+  const setRemoteAnswer = async (answer) => {
+    await peer.setRemoteDescription(answer);
+    return true;
   };
 
+  const sendVideo = async (video) => {
+    const tracks = video.getTracks();
+    for (const track of tracks) {
+      peer.addTrack(track, video);
+    }
+  };
 
-// sendig Vidoe
-const sendVideo = async (video)=>{
-  const tracks = video.getTracks();
-  for(const track of tracks){
-    peer.addTrack(track,video);
-  }
+  const handleSendVideo = useCallback((event) => {
+    const remoteStream = event.streams[0];
+    setRemoteStream(remoteStream);
+  }, []);
 
-}
+  useEffect(() => {
+    peer.addEventListener('track', handleSendVideo);
+    peer.addEventListener('icecandidate', (event) => {
+      if (event.candidate) {
+        // Send the candidate to the remote peer
+      }
+    });
 
-const handleSendVideo = useCallback(async(event)=>{
-
-  const video = event.streams;
-  console.log("GOT TRACKS!!",video[1]);
-
-  setRemoteStream(video[1]);
-},[])
-
-useEffect(()=>{
-  peer.addEventListener('track',handleSendVideo);
-  return ()=>{
-    peer.removeEventListener('track',handleSendVideo);
-  }
-
-},[peer,handleSendVideo]);
-
+    return () => {
+      peer.removeEventListener('track', handleSendVideo);
+      peer.close();
+    };
+  }, [peer, handleSendVideo]);
 
   return (
-    <PeerContext.Provider value={{ peer , createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream}}>
+    <PeerContext.Provider value={{ peer, createOffer, createAnswer, setRemoteAnswer, sendVideo, remoteStream }}>
       {props.children}
     </PeerContext.Provider>
   );
-};
-
+}
 
 export default PeerProvider;
