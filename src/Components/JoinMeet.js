@@ -162,14 +162,10 @@ if(adminSocketStatus){
  };
 //  Getting Anser
  if (data.type === "sendingAnswer") {
-   const hs = await setRemoteAnswer(data.content);
-   setHandShake(hs);
-  
+   await setRemoteAnswer(data.content);
  };
 
  if(data.type === "negAnswer");
- alert("got neg answer");
-
  await peer.setRemoteDescription(data.content);
       };
 
