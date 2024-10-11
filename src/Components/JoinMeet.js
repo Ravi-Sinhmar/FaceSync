@@ -147,27 +147,33 @@ const startAdminSocket = useCallback(() => {
 
   
 
-  const adminMessageListener = ()=>{
-    alert("got a messages on admin side");
-       };
-       const userMessageListener = ()=>{
-        alert("got a messages on user side");
-           };
+
 
   useEffect(()=>{
 if(adminSocketStatus){
-  // case 1 When admin refresh but firend is still there
- 
-  adminSocket.send(
-    JSON.stringify({
-      admin:true,
-      type: "adminOn",
-      cleanUserName: adminCon,
-      fullUserName:"updateMe",
-      cleanFriendName : "updateMe",
-      fullFiendName:"updateMe",
-    })
-  );
+  const wsMessage = {
+    admin:true,
+    cleanUserName: adminCon,
+    fullUserName:"updateMe",
+    cleanFriendName : "updateMe",
+    fullFiendName:"updateMe",
+  };
+  const adminMessageListener =async (event)=>{
+    const data = JSON.parse(event.data);
+    // if Someone Reset or Refresh or Firsttime going on link
+ if (data.type === "userOn" || data.type === "askingOffer") {
+  const offer = await createOffer();
+  adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingOffer",content: offer}));
+ };
+//  Getting Anser
+ if (data.type === "sendingAnswer") {
+  await setRemoteAnswer(data.content);
+  adminSocket.send(JSON.stringify({ ...wsMessage,type:"continue..."}));
+ };
+      };
+
+
+  adminSocket.send(JSON.stringify({ ...wsMessage,type:"adminOn"}));
    // Listening for messages 
    adminSocket.addEventListener("message", adminMessageListener);
   return () => {
@@ -177,16 +183,33 @@ if(adminSocketStatus){
 };
 
 if(userSocketStatus && joined){
-  userSocket.send(
-    JSON.stringify({
-      admin:false,
-      type: "userON",
-      cleanUserName: userName,
-      fullUserName:fullName,
-      cleanFriendName : adminCon,
-      fullFiendName:"updateMe",
-    })
-  );
+  const wsMessage = {
+    admin:false,
+    cleanUserName: adminCon,
+    fullUserName:"updateMe",
+    cleanFriendName : "updateMe",
+    fullFiendName:"updateMe",
+  };
+  const userMessageListener = async(event)=>{
+    const data = JSON.parse(event.data);
+    // If admin Reset or refresh
+    if (data.type === "adminOn") {
+    adminSocket.send(JSON.stringify({ ...wsMessage,type:"askingOffer"}));
+     };
+
+     // If getting offer
+     if (data.type === "sendingOffer") {
+      const answer = await createAnswer(data.content);
+      adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingAnswer", content: answer}));
+       };
+
+
+
+            };
+
+  adminSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
+
+ 
   userSocket.addEventListener("message", userMessageListener);
 return () => {
   userSocket.removeEventListener("message", userMessageListener);
@@ -194,8 +217,27 @@ return () => {
 }
 
 
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer]);
 
+  const handleNeg = useCallback(async () => {
+    alert("nego need");
+    // const offer = await peer.createOffer();
+    // adminSocket.send(
+    //   JSON.stringify({
+    //     type: "negOffer",
+    //     userName: adminCon,
+    //     friendName: friend,
+    //     content: offer,
+    //   })
+    // );
+  }, []);
+
+  useEffect(() => {
+    peer.addEventListener("negotiationneeded", handleNeg);
+    return () => {
+      peer.removeEventListener("negotiationneeded", handleNeg);
+    };
+  }, [handleNeg, peer]);
 
   return (
     <React.Fragment>
