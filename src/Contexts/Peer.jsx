@@ -57,7 +57,12 @@ const handleSendVideo = useCallback(async(event)=>{
   console.log("GOT TRACKS!!",video[0]);
 
   setRemoteStream(video[0]);
-},[])
+},[]);
+
+
+useEffect(()=>{
+handleSendVideo();
+},[handleSendVideo])
 
 useEffect(()=>{
   peer.addEventListener('track',handleSendVideo);
