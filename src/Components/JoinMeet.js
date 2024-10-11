@@ -10,6 +10,7 @@ function JoinMeet() {
   const [userName, setUserName] = useState(null);
   const [fullName, setFullName] = useState(null);
   const [meetingId, setMeetingId] = useState(null);
+  const [handShake, setHandShake] = useState(false);
   const [needWebSocket, setNeedWebSocket] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [admin, setAdmin] = useState(false);
@@ -130,24 +131,18 @@ const startAdminSocket = useCallback(() => {
     };
   }, [adminSocket, userSocket]);
 
-  // const getMyVideo = useCallback(async () => {
-  //   const video = await navigator.mediaDevices.getUserMedia({
-  //     video: true,
-  //     audio: true,
-  //   });
-  //   setMyVideo(video);
-  //   console.log('Video tracks:', video.getVideoTracks());
-  //   console.log('Audio tracks:', video.getAudioTracks());
-  // }, []);
-  // useEffect(() => {
-  //   getMyVideo();
-  // }, [getMyVideo]);
-
-
-
-  
-
-
+  const getMyVideo = useCallback(async () => {
+    const video = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+    setMyVideo(video);
+    console.log('Video tracks:', video.getVideoTracks());
+    console.log('Audio tracks:', video.getAudioTracks());
+  }, []);
+  useEffect(() => {
+    getMyVideo();
+  }, [getMyVideo]);
 
   useEffect(()=>{
 if(adminSocketStatus){
@@ -167,8 +162,9 @@ if(adminSocketStatus){
  };
 //  Getting Anser
  if (data.type === "sendingAnswer") {
-  await setRemoteAnswer(data.content);
-  adminSocket.send(JSON.stringify({ ...wsMessage,type:"continue..."}));
+   const hs = await setRemoteAnswer(data.content);
+   setHandShake(hs);
+  
  };
       };
 
@@ -236,6 +232,14 @@ return () => {
       peer.removeEventListener("negotiationneeded", handleNeg);
     };
   }, [handleNeg, peer]);
+
+  useEffect(() => {
+    if (handShake) {
+      sendVideo(myVideo);
+    }
+  }, [handShake, sendVideo, myVideo]);
+
+
 
   return (
     <React.Fragment>
