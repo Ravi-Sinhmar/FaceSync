@@ -54,10 +54,10 @@ const sendVideo = async (video)=>{
 
 const handleSendVideo = useCallback(async(event)=>{
 
-  const video = await event.streams;
-  console.log("GOT TRACKS!!",video[1]);
+  const video =await event.streams;
+  console.log("GOT TRACKS!!",video[0]);
 
-  setRemoteStream(video[1]);
+  setRemoteStream(video[0]);
 },[])
 
 useEffect(()=>{
