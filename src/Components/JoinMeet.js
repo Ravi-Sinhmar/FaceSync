@@ -185,9 +185,9 @@ if(adminSocketStatus){
 if(userSocketStatus && joined){
   const wsMessage = {
     admin:false,
-    cleanUserName: adminCon,
-    fullUserName:"updateMe",
-    cleanFriendName : "updateMe",
+    cleanUserName: userName,
+    fullUserName:fullName,
+    cleanFriendName :adminCon,
     fullFiendName:"updateMe",
   };
   const userMessageListener = async(event)=>{
