@@ -204,7 +204,7 @@ if(userSocketStatus && joined){
        };
 
        if(data.type === "negOffer"){
-        const answer = await createAnswer(data.content);
+        const answer = await peer.createAnswer(data.content);
       userSocket.send(JSON.stringify({ ...wsMessage,type:"negAnswer", content: answer}));
 
        }
