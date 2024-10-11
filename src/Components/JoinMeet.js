@@ -208,8 +208,6 @@ if(userSocketStatus && joined){
             };
 
   userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
-
- 
   userSocket.addEventListener("message", userMessageListener);
 return () => {
   userSocket.removeEventListener("message", userMessageListener);
