@@ -162,11 +162,10 @@ if(adminSocketStatus){
  };
 //  Getting Anser
  if (data.type === "sendingAnswer") {
-   await setRemoteAnswer(data.content);
+   const hs = await setRemoteAnswer(data.content);
+   setHandShake(hs);
+  
  };
-
- if(data.type === "negAnswer");
- await peer.setRemoteDescription(data.content);
       };
 
 
@@ -199,12 +198,6 @@ if(userSocketStatus && joined){
       const answer = await createAnswer(data.content);
       userSocket.send(JSON.stringify({ ...wsMessage,type:"sendingAnswer", content: answer}));
        };
-
-       if(data.type === "negOffer"){
-        const answer = await peer.createAnswer(data.content);
-      userSocket.send(JSON.stringify({ ...wsMessage,type:"negAnswer", content: answer}));
-
-       }
             };
 
   userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
@@ -213,21 +206,20 @@ return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,peer]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer]);
 
   const handleNeg = useCallback(async () => {
-    alert("need neg")
-    const wsMessage = {
-      admin:true,
-      cleanUserName: adminCon,
-      fullUserName:"updateMe",
-      cleanFriendName : "updateMe",
-      fullFiendName:"updateMe",
-    };
-    const offer = await peer.createOffer();
-    adminSocket.send(JSON.stringify({ ...wsMessage,type:"negOffer",content:offer}));
-
-  }, [peer,adminCon,adminSocket]);
+    alert("nego need");
+    // const offer = await peer.createOffer();
+    // adminSocket.send(
+    //   JSON.stringify({
+    //     type: "negOffer",
+    //     userName: adminCon,
+    //     friendName: friend,
+    //     content: offer,
+    //   })
+    // );
+  }, []);
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
