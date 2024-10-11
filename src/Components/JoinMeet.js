@@ -168,6 +168,11 @@ if(adminSocketStatus){
    setHandShake(hs);
   
  };
+
+ //  neg Anser
+ if (data.type === "negAnswer") {
+  await setRemoteAnswer(data.content);
+};
       };
 
 
@@ -203,7 +208,8 @@ if(userSocketStatus && joined){
 
          // If neg need
      if (data.type === "negNeed") {
-      await setRemoteAnswer(data.content);
+      const answer = await createAnswer(data.content)
+      userSocket.send(JSON.stringify({ ...wsMessage,type:"negAnswer", content: answer}));
        };
             };
 
@@ -224,9 +230,9 @@ return () => {
       cleanFriendName : "updateMe",
       fullFiendName:"updateMe",
     };
-    const answer = await createAnswer(finalOffer);
-    adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: answer}));
-  }, [adminCon,adminSocket,finalOffer,createAnswer]);
+    const offer = await createOffer();
+    adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: offer}));
+  }, [adminCon,adminSocket,createOffer]);
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
