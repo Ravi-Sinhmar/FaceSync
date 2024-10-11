@@ -224,9 +224,9 @@ return () => {
       cleanFriendName : "updateMe",
       fullFiendName:"updateMe",
     };
-    const answer = await peer.createAnswer(finalOffer);
+    const answer = await createAnswer(finalOffer);
     adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: answer}));
-  }, [peer,adminCon,adminSocket,finalOffer]);
+  }, [adminCon,adminSocket,finalOffer,createAnswer]);
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
