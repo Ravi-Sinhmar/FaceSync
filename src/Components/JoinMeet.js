@@ -168,8 +168,9 @@ if(adminSocketStatus){
  };
 
  if(data.type === "negAnswer");
+ alert("got neg answer");
+
  await peer.setRemoteDescription(data.content);
- alert("got neg answer")
       };
 
 
