@@ -25,7 +25,7 @@ function JoinMeet() {
   const [myVideo, setMyVideo] = useState(null);
  
   // contexts
-  const { setFriend, adminCon, friend, setAdminCon } = useFriend();
+  const {adminCon, setAdminCon } = useFriend();
   const {
     peer,
     createOffer,
