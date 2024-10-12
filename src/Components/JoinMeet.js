@@ -5,8 +5,8 @@ import { useFriend } from "./../Contexts/Friend";
 import { usePeer } from "./../Contexts/Peer";
 
 function JoinMeet() {
-  const videoRef = useRef();
-  const videoRef2 = useRef();
+  const localVideoRef = useRef();
+  const remoteVideoRef = useRef();
   const [adminName, setAdminName] = useState(null);
   const [userName, setUserName] = useState(null);
   const [fullName, setFullName] = useState(null);
@@ -133,6 +133,8 @@ const startAdminSocket = useCallback(() => {
     };
   }, [adminSocket, userSocket]);
 
+
+
   const getMyVideo = useCallback(async () => {
     try {
       const video = await navigator.mediaDevices.getUserMedia({
@@ -145,8 +147,8 @@ const startAdminSocket = useCallback(() => {
       console.log('Audio tracks:', video.getAudioTracks());
   
       // Set the video source to the `videoRef`
-      if (videoRef.current) {
-        videoRef.current.srcObject = video;
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = video;
       
         
 
@@ -158,6 +160,17 @@ const startAdminSocket = useCallback(() => {
   useEffect(() => {
     getMyVideo();
   }, [getMyVideo]);
+
+
+  const getRemoteVideo = useCallback(()=>{
+    if (remoteVideoRef.current) {
+      remoteVideoRef.current.srcObject = video;
+    }
+  });
+
+  useEffect(()=>{
+    getRemoteVideo();
+  },[getRemoteVideo]);
 
   useEffect(()=>{
 if(adminSocketStatus){
@@ -263,9 +276,9 @@ return () => {
     <React.Fragment>
       {true ? (
         <div className="bg-blf w-screen h-screen flex flex-col justify-between overflow-hidden">
-          <video ref={videoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
+          <video ref={localVideoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
-        <ReactPlayer url={remoteStream} muted playing className="rounded-md object-cover h-full "></ReactPlayer>
+        <video ref={remoteVideoRef} muted autoPlay playsInline className="rounded-md object-cover h-full "></ReactPlayer>
         {user ? (<React.Fragment>   <input
                 value={userName}
                 onChange={handleInputChange}
