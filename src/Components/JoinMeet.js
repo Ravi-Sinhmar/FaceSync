@@ -275,6 +275,9 @@ return () => {
   return (
     <React.Fragment>
       {true ? (
+
+
+
         <div className="bg-blf w-screen h-screen flex flex-col justify-between overflow-hidden">
           <video ref={localVideoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
@@ -282,6 +285,7 @@ return () => {
         {user ? (<React.Fragment>   <input
                 value={userName}
                 onChange={handleInputChange}
+
                 placeholder="Your name please"
                 className="border border-blt rounded-md py-2 bg-blm"
                 type="text"
