@@ -94,23 +94,23 @@ testStream();
 
 
 const startAdminSocket = useCallback(() => {
-      if (needWebSocket && admin) {
+      if (needWebSocket && admin && test) {
         const newSocket = new WebSocket(
           `wss://facesyncbackend.onrender.com/?fullMeetId=${adminName}${meetingId}&deviceName=${adminName}`
         );
         setAdminSocket(newSocket);
       }
-  }, [needWebSocket, admin, adminName, meetingId]);
+  }, [needWebSocket, admin, adminName, meetingId,test]);
 
   const startUserSocket = useCallback(() => {
-    if (needWebSocket && user && joined) {
+    if (needWebSocket && user && joined && test) {
         const cleanName = userName.toLowerCase().replace(/\s+/g, "");
         const newSocket = new WebSocket(
           `wss://facesyncbackend.onrender.com/?fullMeetId=${cleanName}${meetingId}&deviceName=${userName}`
         );
         setUserSocket(newSocket);
     }
-  }, [needWebSocket, meetingId, userName, user,joined]);
+  }, [needWebSocket, meetingId, userName, user,joined,test]);
 
   useEffect(() => {
     startUserSocket();
@@ -269,7 +269,6 @@ return () => {
     const offer = await createOffer();
     adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: offer}));
   }, [adminCon,adminSocket,createOffer]);
-
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
     return () => {
