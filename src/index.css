@@ -682,6 +682,10 @@ video {
   width: 4rem;
 }
 
+.w-svw{
+  width: 100svw;
+}
+
 .scale-150{
   --tw-scale-x: 1.5;
   --tw-scale-y: 1.5;
