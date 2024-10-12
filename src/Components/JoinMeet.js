@@ -141,6 +141,9 @@ const startAdminSocket = useCallback(() => {
 
   const getMyVideo = useCallback(async () => {
     try {
+      if(stream){
+        setSetting(true);
+      }
       setMyVideo(stream);
       console.log('Video tracks:', stream.getVideoTracks());
       console.log('Audio tracks:', stream.getAudioTracks());
@@ -192,10 +195,7 @@ if(adminSocketStatus){
 
  //  neg Anser
  if (data.type === "negAnswer") {
-  const fn = await setRemoteAnswer(data.content);
-  if(fn){
-    setSetting(true);
-  }
+   await setRemoteAnswer(data.content);
 };
       };
 
