@@ -148,9 +148,6 @@ const startAdminSocket = useCallback(() => {
       // Set the video source to the `videoRef`
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = stream;
-      
-        
-
       }
     } catch (error) {
       console.error('Error accessing camera:', error);
@@ -246,7 +243,7 @@ return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,setSetting]);
 
   const handleNeg = useCallback(async () => {
     console.log("nego need");
