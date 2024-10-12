@@ -265,8 +265,8 @@ return () => {
         <div className="bg-blf w-screen h-screen flex flex-col justify-between overflow-hidden">
           <video ref={videoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
-        {user ? (<React.Fragment> <ReactPlayer url={remoteStream} muted playing className="rounded-md object-cover h-full "></ReactPlayer>
-              <input
+        <ReactPlayer url={remoteStream} muted playing className="rounded-md object-cover h-full "></ReactPlayer>
+        {user ? (<React.Fragment>   <input
                 value={userName}
                 onChange={handleInputChange}
                 placeholder="Your name please"
