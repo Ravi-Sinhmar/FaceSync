@@ -145,9 +145,9 @@ const startAdminSocket = useCallback(() => {
       console.log('Audio tracks:', video.getAudioTracks());
   
       // Set the video source to the `videoRef`
-      if (videoRef.current && videoRef2.current) {
+      if (videoRef.current) {
         videoRef.current.srcObject = video;
-        videoRef2.current.srcObject = remoteStream;
+      
         
 
       }
@@ -261,10 +261,7 @@ return () => {
         <div className="bg-blf w-screen h-screen flex flex-col justify-between overflow-hidden">
           <video ref={videoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
-<video ref={videoRef2} muted autoPlay playsInline className="rounded-md object-cover h-full "></video>
-     
-          {user ? (
-            <React.Fragment>
+        {user ? (<React.Fragment> <ReactPlayer url={remoteStream} muted autoPlay playsInline className="rounded-md object-cover h-full "></ReactPlayer>
               <input
                 value={userName}
                 onChange={handleInputChange}
@@ -273,9 +270,7 @@ return () => {
                 type="text"
               />
               <button onClick={()=>{setJoined(true)}} >JOIN</button>
-         <h6>Local Video</h6>
-      
-
+        
             </React.Fragment>
           ) : null}
           
