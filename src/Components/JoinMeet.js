@@ -45,7 +45,7 @@ const tStream = await navigator.mediaDevices.getUserMedia({video:true,audio:true
 if(tStream){
   setSetting(true);
 }
-  },[]);
+  },[setSetting]);
 
 useEffect(()=>{
 testStream();
