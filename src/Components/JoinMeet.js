@@ -145,9 +145,8 @@ const startAdminSocket = useCallback(() => {
       console.log('Audio tracks:', video.getAudioTracks());
   
       // Set the video source to the `videoRef`
-      if (videoRef.current && videoRef2.current) {
+      if (videoRef.current) {
         videoRef.current.srcObject = video;
-        videoRef2.current.srcObject = remoteStream;
       
         
 
@@ -155,7 +154,7 @@ const startAdminSocket = useCallback(() => {
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
-  }, [remoteStream]);
+  }, []);
   useEffect(() => {
     getMyVideo();
   }, [getMyVideo]);
@@ -254,9 +253,11 @@ return () => {
     };
   }, [handleNeg, peer]);
 
-  useEffect(() => {
+ useEffect(() => {
+    if (handShake) {
       sendVideo(myVideo);
-  }, [sendVideo, myVideo]);
+    }
+  }, [handShake, sendVideo, myVideo]);
 
   return (
     <React.Fragment>
@@ -264,8 +265,7 @@ return () => {
         <div className="bg-blf w-screen h-screen flex flex-col justify-between overflow-hidden">
           <video ref={videoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
-        <video ref={videoRef2} muted autoPlay playsInline className="rounded-md object-cover h-full "></video>
-        {user ? (  <React.Fragment> 
+        {user ? (<React.Fragment> <ReactPlayer url={remoteStream} muted autoPlay playsInline className="rounded-md object-cover h-full "></ReactPlayer>
               <input
                 value={userName}
                 onChange={handleInputChange}
