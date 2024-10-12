@@ -3,6 +3,8 @@ import ReactPlayer from "react-player";
 import { useSearchParams } from "react-router-dom";
 import { useFriend } from "./../Contexts/Friend";
 import { usePeer } from "./../Contexts/Peer";
+import {useStream} from "../Contexts/Stream";
+import Setting from "./Setting";
 
 function JoinMeet() {
   const localVideoRef = useRef();
@@ -23,8 +25,10 @@ function JoinMeet() {
   const [adminSocketStatus, setAdminSocketStatus] = useState(false);
   const [userSocketStatus, setUserSocketStatus] = useState(false);
   const [myVideo, setMyVideo] = useState(null);
+  
  
   // contexts
+  const {stream, setStream , constraints , setConstraints ,setting,setSetting} = useStream();
   const {adminCon, setAdminCon } = useFriend();
   const {
     peer,
@@ -137,18 +141,13 @@ const startAdminSocket = useCallback(() => {
 
   const getMyVideo = useCallback(async () => {
     try {
-      const video = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-  
-      setMyVideo(video);
-      console.log('Video tracks:', video.getVideoTracks());
-      console.log('Audio tracks:', video.getAudioTracks());
+      setMyVideo(stream);
+      console.log('Video tracks:', stream.getVideoTracks());
+      console.log('Audio tracks:', stream.getAudioTracks());
   
       // Set the video source to the `videoRef`
       if (localVideoRef.current) {
-        localVideoRef.current.srcObject = video;
+        localVideoRef.current.srcObject = stream;
       
         
 
@@ -156,7 +155,7 @@ const startAdminSocket = useCallback(() => {
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
-  }, []);
+  }, [stream]);
   useEffect(() => {
     getMyVideo();
   }, [getMyVideo]);
@@ -196,7 +195,10 @@ if(adminSocketStatus){
 
  //  neg Anser
  if (data.type === "negAnswer") {
-  await setRemoteAnswer(data.content);
+  const fn = await setRemoteAnswer(data.content);
+  if(fn){
+    setSetting(true);
+  }
 };
       };
 
@@ -274,7 +276,7 @@ return () => {
 
   return (
     <React.Fragment>
-      {true ? (
+      {!setting ? (
         <div className="bg-blf w-svw h-svh flex flex-col justify-between overflow-hidden">
           <video ref={localVideoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
@@ -308,7 +310,9 @@ return () => {
 
         </div>
         </div>
-      ) : null}
+      ) : 
+      <Setting localVideoRef={localVideoRef} />
+      }
       
     </React.Fragment>
   );
