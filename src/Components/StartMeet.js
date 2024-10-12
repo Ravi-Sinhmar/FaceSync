@@ -1,10 +1,12 @@
 import React, { useState, useCallback } from "react";
 import { useFriend } from "./../Contexts/Friend";
+import Loader from "./Loader";
 import { useNavigate } from 'react-router-dom';
 import { RandomString } from "../JavaScriptFun/RandomString";
 function StartMeet() {
  const [isClick, setIsClick] = useState(false);
  const [adminName, setAdminName] = useState('');
+ const [isLoading,setIsLoading] = useState(false);
 
  const navigate = useNavigate();
  const {setAdminCon } = useFriend();
@@ -22,6 +24,7 @@ const handleInputChange = (event) => {
 };
 
 const saveMeet = useCallback(()=>{
+  setIsLoading(true);
   console.log("saveMeetCallback");
   const meetId = RandomString(6);
     console.log("fetch request sent",adminName,meetId);
@@ -34,6 +37,7 @@ const saveMeet = useCallback(()=>{
       },
       body: JSON.stringify(content)
     }).then(data=>data.json()).then((data)=>{
+      setIsLoading(false);
 if(data.status === 'success'){
   const cleanName = adminName.toLowerCase().replace(/\s+/g, "");
   navigate(`/meeting/?adminName=${cleanName}&meetingId=${meetId}`)}
@@ -41,27 +45,31 @@ if(data.status === 'success'){
 },[adminName,navigate]);
   return (
     <React.Fragment>
-    <div className=" flex flex-col h-svh w-full items-center justify-center gap-16  bg-blm ">
-      <div>
+{ isLoading ? <Loader className="bg-blf">It might take 2 minutes on first time load , so please have paticence</Loader> : null}
+
+    <div className=" font-rob flex flex-col h-svh w-full items-center justify-center gap-4 pb-9">
+      <div className="flex flex-col  items-center gap-4">
         <img
-          className="w-44 aspect-square "
+          className="w-40 aspect-square "
           src="/images/welcome.png"
           alt="Welcome"
         />
-        <div className="flex flex-col items-center mt-3">
-          <h1 className="text-2xl font-[600]">Let's Meet</h1>
-          <p className="text-blt font-[500] text-sm">Dil khol k baaten kro</p>
+        <div className="flex flex-col items-center justify-center gap-4">
+          <h1 className="text-3xl font-[500] text-blf">Face Sync</h1>
+          <p className="text-gray-500 font-[400] text-center w-10/12">{!isClick ? "Connect, Laugh, and Create moments. Anytime, Anywhere with Love😚":"Enter name, Generate link, Share Link with friend and roast him/her😎"}</p>
         </div>
       </div>
-      {isClick && (
-        <React.Fragment>
-        <input value={adminName}
-        onChange={handleInputChange} className="border border-blt rounded-md py-2 bg-blg"  type="text" />
-        <button onClick={saveMeet}>Continue</button>
-        </React.Fragment>
-      )}
+     
       {!isClick && (
-        <button onClick={startMeet}>Start Instant Meeting</button>
+        <button onClick={startMeet} className="bg-blf text-white rounded-full py-2 w-4/5 font-[500] text-lg mt-6">Start Instant Meeting</button>
+      )}
+        
+       {isClick && (
+        <div className="w-full flex flex-col justify-center items-center gap-4 pb-10 ">
+         <input value={adminName}
+         onChange={handleInputChange} className=" border-[1px] border-blf w-4/5 py-2 px-3 bg-gray-100 rounded-full mt-8" placeholder="Your name please" type="text" />
+        <button onClick={saveMeet} className="bg-blf text-white rounded-full py-2 w-4/5 font-[500] text-lg">Generate Link</button>
+        </div>
       )}
     </div>
     </React.Fragment>
