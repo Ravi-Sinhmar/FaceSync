@@ -21,7 +21,7 @@ function StreamProvider(props){
     setStream(st);
 }catch(err){
     console.log(err)
-}},[]);
+}},[constraints]);
 
 useEffect(()=>{
     getStream();
