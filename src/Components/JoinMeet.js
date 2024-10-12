@@ -275,17 +275,13 @@ return () => {
   return (
     <React.Fragment>
       {true ? (
-
-
-
         <div className="bg-blf w-screen h-screen flex flex-col justify-between overflow-hidden">
           <video ref={localVideoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
         <video ref={remoteVideoRef} muted autoPlay playsInline className="rounded-md object-cover h-full "></video>
-        {user ? (<React.Fragment> <input
+        {user && !joined ? (<React.Fragment> <input
                 value={userName}
                 onChange={handleInputChange}
-
                 placeholder="Your name please"
                 className="border border-blt rounded-md py-2 bg-blm"
                 type="text"
@@ -296,7 +292,7 @@ return () => {
           ) : null}
           
         </div>
-        <div className="flex justify-between items-center px-10 py-4 bg-blm rounded-lg">
+        <div className="flex justify-between items-center px-10 py-4 bg-blm rounded-lg h-fit">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" />
 </svg>

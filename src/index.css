@@ -644,6 +644,12 @@ video {
   height: 6rem;
 }
 
+.h-fit{
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
 .w-10{
   width: 2.5rem;
 }
