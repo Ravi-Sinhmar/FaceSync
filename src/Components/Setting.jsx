@@ -34,6 +34,7 @@ function Setting({localVideoRef}) {
     const changeAudioInput = async(e)=>{
         //changed audio input!!!
         const deviceId = e.target.value;
+        console.log("changed audio input");
         setConstraints({
             audio: {deviceId: {exact: deviceId}},
             video: true,
@@ -41,12 +42,13 @@ function Setting({localVideoRef}) {
     }
     const changeAudioOutput = async(e)=>{
       await localVideoRef.current.setSinkId(e.target.value);
-        console.log("Changed audio device!")
+        console.log("Changed audio ouput!")
     }
     
     const changeVideo = async(e)=>{
         //changed video input!!!
         const deviceId = e.target.value;
+        console.log("changed Vid input");
         setConstraints({
             audio: true,
             video: {deviceId: {exact: deviceId}},
