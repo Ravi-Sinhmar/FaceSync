@@ -282,7 +282,7 @@ return () => {
           <video ref={localVideoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
         <video ref={remoteVideoRef} muted autoPlay playsInline className="rounded-md object-cover h-full "></video>
-        {user ? (<React.Fragment>   <input
+        {user ? (<React.Fragment> <input
                 value={userName}
                 onChange={handleInputChange}
 

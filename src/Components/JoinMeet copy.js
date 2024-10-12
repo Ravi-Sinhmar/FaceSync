@@ -260,7 +260,7 @@ const startAdminSocket = useCallback(() => {
             muted
             className="w-20 aspect-square bg-blf"
             url={remoteStream}
-          ></ReactPlayer>
+          >  </ReactPlayer>
           <br />
           {user ? (
             <React.Fragment>
