@@ -29,7 +29,7 @@ function JoinMeet() {
   
  
   // contexts
-  const {stream, setStream , constraints , setConstraints ,setting,setSetting,text,setTest} = useStream();
+  const {stream, setStream , constraints , setConstraints ,setting,setSetting,test,setTest} = useStream();
   const {adminCon, setAdminCon} = useFriend();
   const {
     peer,
@@ -281,7 +281,7 @@ return () => {
     if (handShake && test) {
       sendVideo(myVideo);
     }
-  }, [handShake, sendVideo, myVideo]);
+  }, [handShake, sendVideo, myVideo,test]);
 
   return (
     <React.Fragment>
