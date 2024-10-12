@@ -141,7 +141,9 @@ const startAdminSocket = useCallback(() => {
 
   const getMyVideo = useCallback(async () => {
     try {
-     
+      if(stream){
+        setSetting(true);
+      }
       setMyVideo(stream);
       console.log('Video tracks:', stream.getVideoTracks());
       console.log('Audio tracks:', stream.getAudioTracks());
@@ -153,7 +155,7 @@ const startAdminSocket = useCallback(() => {
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
-  }, [stream]);
+  }, [stream,setSetting]);
   useEffect(() => {
     getMyVideo();
   }, [getMyVideo]);
@@ -227,7 +229,6 @@ if(userSocketStatus && joined){
      if (data.type === "sendingOffer") {
       const answer = await createAnswer(data.content);
       userSocket.send(JSON.stringify({ ...wsMessage,type:"sendingAnswer", content: answer}));
-      setSetting(true);
        };
 
          // If neg need
