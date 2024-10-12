@@ -2,7 +2,7 @@ import React , {useCallback, useEffect, useRef} from "react";
 import {useStream} from "../Contexts/Stream";
 
 function Setting({localVideoRef}) {
-    const {stream, setStream , constraints,setConstraints,setting,setSetting } = useStream();
+    const {stream, setStream , constraints,setConstraints,setting,setSetting,test,setTest } = useStream();
     const audioInputEl = useRef(null);
     const audioOutputEl =useRef(null);
     const videoInputEl =useRef(null);
@@ -60,6 +60,7 @@ function Setting({localVideoRef}) {
     <div>
     <button onClick={() => {
   setSetting(false);
+  setTest(true);
 }}>Done</button>
              <div>
                 <label>Select audio input: </label>

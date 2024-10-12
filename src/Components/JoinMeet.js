@@ -26,10 +26,11 @@ function JoinMeet() {
   const [userSocketStatus, setUserSocketStatus] = useState(false);
   const [myVideo, setMyVideo] = useState(null);
   
+  
  
   // contexts
-  const {stream, setStream , constraints , setConstraints ,setting,setSetting} = useStream();
-  const {adminCon, setAdminCon } = useFriend();
+  const {stream, setStream , constraints , setConstraints ,setting,setSetting,text,setTest} = useStream();
+  const {adminCon, setAdminCon} = useFriend();
   const {
     peer,
     createOffer,
@@ -38,6 +39,17 @@ function JoinMeet() {
     sendVideo,
     remoteStream,
   } = usePeer();
+
+const testStream = useCallback(async()=>{
+const tStream = await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+if(tStream){
+  setSetting(true);
+}
+  },[]);
+
+useEffect(()=>{
+testStream();
+},[testStream]);
 
   const handleInputChange = (event) => {
     let uName = event.target.value;
@@ -141,9 +153,6 @@ const startAdminSocket = useCallback(() => {
 
   const getMyVideo = useCallback(async () => {
     try {
-      if(stream){
-        setSetting(true);
-      }
       setMyVideo(stream);
       console.log('Video tracks:', stream.getVideoTracks());
       console.log('Audio tracks:', stream.getAudioTracks());
@@ -155,10 +164,12 @@ const startAdminSocket = useCallback(() => {
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
-  }, [stream,setSetting]);
+  }, [stream]);
   useEffect(() => {
-    getMyVideo();
-  }, [getMyVideo]);
+    if(stream){
+      getMyVideo();
+    }
+  }, [getMyVideo,stream]);
 
 
   const getRemoteVideo = useCallback(()=>{
@@ -267,7 +278,7 @@ return () => {
   }, [handleNeg, peer]);
 
  useEffect(() => {
-    if (handShake) {
+    if (handShake && test) {
       sendVideo(myVideo);
     }
   }, [handShake, sendVideo, myVideo]);
