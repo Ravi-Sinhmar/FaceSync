@@ -29,6 +29,7 @@ function JoinMeet() {
   const [isRemoteAudioEnabled, setIsRemoteAudioEnabled] = useState(true);
   const [handShake, setHandShake] = useState(false);
   const [handShake2, setHandShake2] = useState(false);
+
  
   // contexts
   const {adminCon, setAdminCon} = useFriend();
@@ -281,6 +282,10 @@ if(userSocketStatus && joined){
      if (data.type === "sendingOffer") {
       const answer = await createAnswer(data.content);
       userSocket.send(JSON.stringify({ ...wsMessage,type:"sendingAnswer", content: answer}));
+if(!handShake2){
+  userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
+  setHandShake2(true);
+}
        };
 
          // If neg need
@@ -301,7 +306,7 @@ return () => {
   },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,handShake]);
 
   const handleNeg = useCallback(async () => {
-    console.log("nego need");
+   console.log("nego need");
     const wsMessage = {
       admin:true,
       cleanUserName: adminCon,
