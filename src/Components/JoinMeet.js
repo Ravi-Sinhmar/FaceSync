@@ -240,9 +240,9 @@ if(adminSocketStatus){
 };
       };
 
-if(handShake){
+if(!handShake){
   adminSocket.send(JSON.stringify({ ...wsMessage,type:"adminOn"}));
-  setHandShake(false);
+  setHandShake(true);
 
 }
    // Listening for messages 
@@ -279,9 +279,9 @@ if(userSocketStatus && joined){
       userSocket.send(JSON.stringify({ ...wsMessage,type:"negAnswer", content: answer}));
        };
             };
-      if(handShake){
+      if(!handShake){
         userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
-        setHandShake(false);
+        setHandShake(true);
       };
   userSocket.addEventListener("message", userMessageListener);
 return () => {
