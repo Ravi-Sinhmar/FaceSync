@@ -28,7 +28,7 @@ function JoinMeet() {
   
  
   // contexts
-  const {stream, setStream , constraints , setConstraints ,setting} = useStream();
+  const {stream, setStream , constraints , setConstraints ,setting,setSetting} = useStream();
   const {adminCon, setAdminCon } = useFriend();
   const {
     peer,
@@ -189,6 +189,7 @@ if(adminSocketStatus){
 //  Getting Anser
  if (data.type === "sendingAnswer") {
   await setRemoteAnswer(data.content);
+  setSetting(true);
  };
 
  //  neg Anser
@@ -241,7 +242,7 @@ return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,setSetting]);
 
   const handleNeg = useCallback(async () => {
     console.log("nego need");
@@ -271,7 +272,7 @@ return () => {
 
   return (
     <React.Fragment>
-      {true ? (
+      {!setting ? (
         <div className="bg-blf w-svw h-svh flex flex-col justify-between overflow-hidden">
           <video ref={localVideoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
@@ -304,7 +305,7 @@ return () => {
         </div>
         </div>
       ) : 
-     null
+      <Setting localVideoRef={localVideoRef} />
       }
       
     </React.Fragment>

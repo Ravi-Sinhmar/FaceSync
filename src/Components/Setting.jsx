@@ -35,10 +35,19 @@ function Setting({localVideoRef}) {
         //changed audio input!!!
         const deviceId = e.target.value;
         console.log("changed audio input");
-        setConstraints({
+        const newConstraints = {
             audio: {deviceId: {exact: deviceId}},
             video: true,
-        });
+        }
+        try{
+         let st = await navigator.mediaDevices.getUserMedia(newConstraints);
+           setStream(st);
+         console.log("stream after audio update" , st);
+            const tracks = st.getAudioTracks();
+            console.log(tracks);
+        }catch(err){
+            console.log(err)
+        }
     }
     const changeAudioOutput = async(e)=>{
       await localVideoRef.current.setSinkId(e.target.value);
@@ -49,10 +58,19 @@ function Setting({localVideoRef}) {
         //changed video input!!!
         const deviceId = e.target.value;
         console.log("changed Vid input");
-        setConstraints({
+        const newConstraints = {
             audio: true,
             video: {deviceId: {exact: deviceId}},
-        })
+        }
+        try{
+          let  st = await navigator.mediaDevices.getUserMedia(newConstraints);
+           setStream(st);
+          console.log("stream after updaing video",st);
+            const tracks = st.getVideoTracks();
+            console.log(tracks);
+        }catch(err){
+            console.log(err)
+        }
        
     }
     
