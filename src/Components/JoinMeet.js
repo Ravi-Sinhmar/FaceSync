@@ -285,7 +285,7 @@ if(userSocketStatus && joined){
 if(!handShake2){
   userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
   setHandShake2(true);
-}
+};
        };
 
          // If neg need
@@ -303,7 +303,7 @@ return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,handShake]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,handShake,handShake2]);
 
   const handleNeg = useCallback(async () => {
    console.log("nego need");
