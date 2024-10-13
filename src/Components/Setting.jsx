@@ -36,7 +36,7 @@ function Setting({localVideoRef}) {
         }catch(err){
             console.log(err);
         }
-    },[]);
+    },[setCons]);
     
     useEffect(()=>{
         getDevices();
