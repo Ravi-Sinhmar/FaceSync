@@ -201,7 +201,7 @@ if(adminSocketStatus){
   const adminMessageListener =async (event)=>{
     const data = JSON.parse(event.data);
     // if Someone Reset or Refresh or Firsttime going on link
- if (data.type === "userOn" || data.type === "askingOffer" || data.type === "UnegNeed") {
+ if (data.type === "userOn" || data.type === "UnegNeed") {
   const offer = await createOffer();
   setFinalOffer(offer);
   adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingOffer",content: offer}));
@@ -240,7 +240,7 @@ if(userSocketStatus && joined){
     const data = JSON.parse(event.data);
     // If admin Reset or refresh
     if (data.type === "adminOn") {
-    userSocket.send(JSON.stringify({ ...wsMessage,type:"askingOffer"}));
+    userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
      };
 
      // If getting offer
