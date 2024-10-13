@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import ReactPlayer from "react-player";
 import { useSearchParams } from "react-router-dom";
 import { useFriend } from "./../Contexts/Friend";
 import { usePeer } from "./../Contexts/Peer";
-import {useStream} from "../Contexts/Stream";
+
 import Setting from "./Setting";
 
 function JoinMeet() {
@@ -13,7 +12,6 @@ function JoinMeet() {
   const [userName, setUserName] = useState(null);
   const [fullName, setFullName] = useState(null);
   const [meetingId, setMeetingId] = useState(null);
-  const [handShake, setHandShake] = useState(true);
   const [needWebSocket, setNeedWebSocket] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [finalOffer, setFinalOffer] = useState(null);
@@ -25,11 +23,9 @@ function JoinMeet() {
   const [adminSocketStatus, setAdminSocketStatus] = useState(false);
   const [userSocketStatus, setUserSocketStatus] = useState(false);
   const [myVideo, setMyVideo] = useState(null);
-  
  
   // contexts
-  const {stream, setStream , constraints , setConstraints ,setting,setSetting} = useStream();
-  const {adminCon, setAdminCon } = useFriend();
+  const {adminCon, setAdminCon} = useFriend();
   const {
     peer,
     createOffer,
@@ -37,6 +33,7 @@ function JoinMeet() {
     setRemoteAnswer,
     sendVideo,
     remoteStream,
+    setting,setSetting,cons
   } = usePeer();
 
   const handleInputChange = (event) => {
@@ -66,7 +63,6 @@ function JoinMeet() {
         .then((data) => data.json())
         .then((data) => {
           if (data.status === "success") {
-            setNeedWebSocket(true);
             setAdmin(data.token);
             setUser(!data.token);
           }
@@ -79,6 +75,13 @@ function JoinMeet() {
   useEffect(() => {
     seeMeet();
   },[seeMeet]);
+
+
+  useEffect(()=>{
+    if(setting === "ok"){
+      setNeedWebSocket(true);
+    }
+  },[setting]);
 
 
 const startAdminSocket = useCallback(() => {
@@ -141,22 +144,23 @@ const startAdminSocket = useCallback(() => {
 
   const getMyVideo = useCallback(async () => {
     try {
-      
-      setMyVideo(stream);
-      console.log('Video tracks:', stream.getVideoTracks());
-      console.log('Audio tracks:', stream.getAudioTracks());
+      const st = await navigator.mediaDevices.getUserMedia(cons);
+      setMyVideo(st);
+      console.log('Video tracks:', st.getVideoTracks());
+      console.log('Audio tracks:', st.getAudioTracks());
   
       // Set the video source to the `videoRef`
       if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
+        localVideoRef.current.srcObject = st;
       }
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
-  }, [stream]);
+  }, [cons]);
   useEffect(() => {
+    if( setting === "ok");
     getMyVideo();
-  }, [getMyVideo]);
+  }, [getMyVideo,setting]);
 
 
   const getRemoteVideo = useCallback(()=>{
@@ -189,7 +193,6 @@ if(adminSocketStatus){
 //  Getting Anser
  if (data.type === "sendingAnswer") {
   await setRemoteAnswer(data.content);
-  setSetting(true);
  };
 
  //  neg Anser
@@ -242,7 +245,7 @@ return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,setSetting]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer]);
 
   const handleNeg = useCallback(async () => {
     console.log("nego need");
@@ -265,10 +268,10 @@ return () => {
   }, [handleNeg, peer]);
 
  useEffect(() => {
-    if (handShake) {
+    if (setting === "ok") {
       sendVideo(myVideo);
     }
-  }, [handShake, sendVideo, myVideo]);
+  }, [sendVideo, myVideo,setting]);
 
   return (
     <React.Fragment>

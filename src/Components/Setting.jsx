@@ -1,12 +1,20 @@
 import React , {useCallback, useEffect, useRef} from "react";
-import {useStream} from "../Contexts/Stream";
-
+import { usePeer } from "./../Contexts/Peer";
 function Setting({localVideoRef}) {
-    const {stream, setStream , constraints,setConstraints,setting,setSetting } = useStream();
     const audioInputEl = useRef(null);
     const audioOutputEl =useRef(null);
     const videoInputEl =useRef(null);
     const errV =useRef(null);
+    const {setSetting,setCons} = usePeer();
+    const getStream = useCallback(async () => {
+        try{
+         await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+      }catch(err){
+          console.log(err)
+      }},[]);
+      useEffect(()=>{
+          getStream();
+      },[getStream]);
     const getDevices = useCallback(async()=>{
         try{
             const devices = await navigator.mediaDevices.enumerateDevices();
@@ -39,18 +47,12 @@ function Setting({localVideoRef}) {
         const newConstraints = {
             audio: {deviceId: {exact: deviceId}},
             video: true,
-        }
-        try{
-         let st = await navigator.mediaDevices.getUserMedia(newConstraints);
-           setStream(st);
-         console.log("stream after audio update" , st);
-            const tracks = st.getAudioTracks();
-            console.log(tracks);
-        }catch(err){
-            console.log(err)
-        }
+        };
+        setCons(newConstraints);
+
     }
     const changeAudioOutput = async(e)=>{
+        alert(localVideoRef);
       await localVideoRef.current.setSinkId(e.target.value);
         console.log("Changed audio device!")
     }
@@ -64,27 +66,13 @@ function Setting({localVideoRef}) {
             audio: true,
             video: {deviceId: {exact: deviceId}},
         }
-        alert(deviceId);
-        try{
-          let  st = await navigator.mediaDevices.getUserMedia(newConstraints);
-           setStream(st);
-           alert("st updated");
-          console.log("stream after updaing video",st);
-            const tracks = st.getVideoTracks();
-            console.log(tracks);
-        }catch(err){
-            alert("in catcch")
-            console.log(err)
-            alert(err);
-            errV.current.innerText = err;
-        }
-       
+        setCons(newConstraints);
     }
     
     return(
     <div>
     <button onClick={() => {
-  setSetting(false);
+  setSetting("ok");
 }}>Done</button>
 <h6 ref={errV}>Error</h6>
              <div>

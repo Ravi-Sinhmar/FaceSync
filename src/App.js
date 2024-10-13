@@ -4,13 +4,13 @@ import StartMeet from "./Components/StartMeet";
 import JoinMeet from "./Components/JoinMeet";
 import FriendProvider from './Contexts/Friend';
 import PeerProvider from './Contexts/Peer';
-import StreamProvider from "./Contexts/Stream";
+
 import "./App.css";
 import "./index.css";
 
 function App() {
   return (
-    <StreamProvider>
+   
     <FriendProvider>
       <PeerProvider>
     <Router>
@@ -21,7 +21,7 @@ function App() {
     </Router>
     </PeerProvider>
     </FriendProvider>
-    </StreamProvider>
+   
 
   );
 }

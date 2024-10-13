@@ -5,7 +5,10 @@ export const usePeer = () =>{
 }
 
 function PeerProvider(props){
-  const [remoteStream,setRemoteStream] = useState();
+  const [remoteStream,setRemoteStream] = useState(null);
+  const [setting,setSetting] = useState("none");
+  const [cons,setCons] = useState(null);
+
   const peer = useMemo(
     () =>
       new RTCPeerConnection({
@@ -30,7 +33,7 @@ function PeerProvider(props){
 
   const createAnswer  = async (offer)=>{
   console.log("state of wbeb setremote offer",peer.connectionState);
-    peer.setRemoteDescription(offer);
+  peer.setRemoteDescription(offer);
 const answer = await peer.createAnswer();
 await peer.setLocalDescription(answer);
 return answer;
@@ -71,7 +74,7 @@ useEffect(()=>{
 
 
   return (
-    <PeerContext.Provider value={{ peer , createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream}}>
+    <PeerContext.Provider value={{ peer , createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream,setting,setSetting,cons,setCons}}>
       {props.children}
     </PeerContext.Provider>
   );

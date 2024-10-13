@@ -6,7 +6,7 @@ const MyContext = React.createContext(null);
 }
 function StreamProvider(props){
   const [stream,setStream] = useState(null);
-  const [setting, setSetting] = useState(false);
+  const [setting, setSetting] = useState("none");
   const [constraints,setConstraints] = useState({
     video: true,
     audio: true,
