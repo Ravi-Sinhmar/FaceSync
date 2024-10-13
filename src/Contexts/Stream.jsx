@@ -16,11 +16,12 @@ function StreamProvider(props){
   try{
     const st = await navigator.mediaDevices.getUserMedia(constraints);
     console.log(st);
+    setStream(st);
     const tracks = st.getTracks();
     console.log(tracks);
 }catch(err){
     console.log(err)
-}},[]);
+}},[constraints]);
 
 useEffect(()=>{
     getStream();

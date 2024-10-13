@@ -304,7 +304,7 @@ return () => {
         </div>
         </div>
       ) : 
-      <Setting localVideoRef={localVideoRef} />
+     null
       }
       
     </React.Fragment>
