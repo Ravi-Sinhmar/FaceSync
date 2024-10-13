@@ -27,8 +27,7 @@ function JoinMeet() {
   const [isMicEnabled, setIsMicEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isRemoteAudioEnabled, setIsRemoteAudioEnabled] = useState(true);
-  const [handShake, setHandShake] = useState(false);
-  const [handShake2, setHandShake2] = useState(false);
+
 
  
   // contexts
@@ -299,7 +298,7 @@ return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,handShake2]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer]);
 
   const handleNeg = useCallback(async () => {
    console.log("nego need");
