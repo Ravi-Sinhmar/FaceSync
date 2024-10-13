@@ -67,11 +67,14 @@ function Setting({localVideoRef}) {
         try{
           let  st = await navigator.mediaDevices.getUserMedia(newConstraints);
            setStream(st);
+           alert("st updated");
           console.log("stream after updaing video",st);
             const tracks = st.getVideoTracks();
             console.log(tracks);
         }catch(err){
+            alert("in catcch")
             console.log(err)
+            alert(err);
         }
        
     }
