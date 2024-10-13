@@ -141,7 +141,7 @@ const startAdminSocket = useCallback(() => {
 
   const getMyVideo = useCallback(async () => {
     try {
-      console.log("stream chnaged");
+      alert("stream ch");
       setMyVideo(stream);
       console.log('Video tracks:', stream.getVideoTracks());
       console.log('Audio tracks:', stream.getAudioTracks());
@@ -245,7 +245,7 @@ return () => {
   },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,setSetting]);
 
   const handleNeg = useCallback(async () => {
-    console.log("nego need");
+    alert("nego need");
     const wsMessage = {
       admin:true,
       cleanUserName: adminCon,
