@@ -81,7 +81,7 @@ useEffect(()=>{
 
 
   return (
-    <PeerContext.Provider value={{ peer ,disconnect, createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream,setting,setSetting,cons,setCons}}>
+    <PeerContext.Provider value={{ peer ,disconnect, createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream, setRemoteStream,setting,setSetting,cons,setCons}}>
       {props.children}
     </PeerContext.Provider>
   );
