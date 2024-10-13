@@ -58,10 +58,12 @@ function Setting({localVideoRef}) {
         //changed video input!!!
         const deviceId = e.target.value;
         console.log("changed Vid input");
+        alert("vid change")
         const newConstraints = {
             audio: true,
             video: {deviceId: {exact: deviceId}},
         }
+        alert(deviceId);
         try{
           let  st = await navigator.mediaDevices.getUserMedia(newConstraints);
            setStream(st);
