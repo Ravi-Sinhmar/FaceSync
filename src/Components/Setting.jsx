@@ -73,7 +73,7 @@ function Setting({localVideoRef}) {
 
         // Final Code 
       <div className="w-svw h-svh flex items-center justify-center">
-        <div className="flex flex-col sm:w-1/2 md:w-1/4 h-full bg-blt py-5  pb-12 px-5 justify-between items-center gap-10">
+        <div className="flex flex-col w-full   md:w-1/4  h-full bg-blt py-5  pb-12 px-2 justify-between items-center gap-10">
         <div className="flex flex-col items-center w-full gap-8">
         <button onClick={() => {
   setSetting("ok");

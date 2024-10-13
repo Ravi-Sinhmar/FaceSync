@@ -328,7 +328,6 @@ return () => {
             <div className="flex flex-col justify-center items-center h-full">
               <video
                 ref={remoteVideoRef}
-                muted
                 autoPlay
                 playsInline
                 className="w-full h-full ring-2 ring-black bg-blm rounded-md  object-cover  "
