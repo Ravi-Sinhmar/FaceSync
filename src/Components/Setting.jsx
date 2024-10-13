@@ -19,6 +19,7 @@ function Setting({localVideoRef}) {
         try{
             const devices = await navigator.mediaDevices.enumerateDevices();
             console.log(devices)
+            setCons({video:true,audio:true});
             devices.forEach(d=>{
                 const option = document.createElement('option') //create the option tag
                 option.value = d.deviceId
