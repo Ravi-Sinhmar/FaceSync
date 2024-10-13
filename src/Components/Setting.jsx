@@ -71,24 +71,62 @@ function Setting({localVideoRef}) {
     }
     
     return(
-    <div>
-    <button onClick={() => {
+
+        // Final Code 
+      <div className="w-svw h-svh flex items-center justify-center">
+        <div className="flex flex-col sm:w-1/2 md:w-1/4 h-full bg-blt py-5  pb-12 px-5 justify-between items-center gap-10">
+        <div className="flex flex-col  items-center gap-8">
+        <button onClick={() => {
   setSetting("ok");
-}}>Done</button>
-<h6 ref={errV}>Error</h6>
-             <div>
-                <label>Select audio input: </label>
-                <select onChange={changeAudioInput} ref={audioInputEl} id="audio-input"></select>
-            </div>
-            <div>
-                <label>Select audio output: </label>
-                <select onChange={changeAudioOutput} ref={audioOutputEl} id="audio-output"></select>
-            </div>
-            <div>
-                <label>Select video input: </label>
-                <select onChange={changeVideo} ref={videoInputEl} id="video-input"></select>
-            </div>
-        </div>
+}}  className="flex  items-center w-full  rounded-md  ">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="h-8 w-8 text-blm  p-2 font-[500] bg-blf  rounded-full">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+    </svg>
+            
+            </button>
+       <div className="flex flex-col gap-3 justify-between ">
+         <label className=" font-[500] text-blf">Audio Input(Mic)</label>
+         <select onChange={changeAudioInput} ref={audioInputEl} className=" text-blt px-2  ring-1 ring-gray-500 bg-blg rounded-md w-full text-sm  py-3 "  id="audio-input">
+           <option value="Option1" key="1">
+             CAM - 1 , Defaul Functon why are  you askiing to do  some theing
+           </option>
+           <option value="Option1" key="2">
+             Hi2
+           </option>
+         </select>
+       </div>
+       {/* Sound Output */}
+       <div className="flex flex-col gap-3 justify-between ">
+         <label className="text-blf font-[500] ">Sound Output(Speaker)</label>
+         <select onChange={changeAudioOutput} ref={audioOutputEl} className=" text-blt px-2  ring-1 ring-gray-500 bg-blg rounded-md w-full text-sm  py-3 "  id="audio-input">
+           <option value="Option1" key="1">
+             CAM - 1 , Defaul Functon why are  you askiing to do  some theing
+           </option>
+           <option value="Option1" key="2">
+             Hi2
+           </option>
+         </select>
+       </div>
+ 
+       {/* Camera Type */}
+       <div className="flex flex-col gap-3 justify-between ">
+         <label className="text-blf font-[500]">Camera Type</label>
+         <select onChange={changeVideo} ref={videoInputEl} className=" text-blt px-2  ring-1 ring-gray-500 bg-blg rounded-md w-full text-sm  py-3 "  id="audio-input">
+           <option value="Option1" key="1">
+             CAM - 1 , Defaul Functon why are  you askiing to do  some theing
+           </option>
+           <option value="Option1" key="2">
+             Hi2
+           </option>
+         </select>
+       </div>
+     
+     </div>
+     <button onClick={() => {
+  setSetting("ok");
+}} className="bg-blf text-blm shadow-sm shadow-black w-full py-2 rounded-full text-lg">Continue</button>
+    </div>
+    </div>
     )
 }
 

@@ -61,20 +61,27 @@ const handleSendVideo = useCallback(async(event)=>{
   setRemoteStream(video[0]);
 },[]);
 
+// close connection
+const disconnect = useCallback(() => {
+  if (peer.connectionState !== "closed") {
+    peer.close();
+    setRemoteStream(null);
+    // Optionally, reset other relevant state variables (setting, cons)
+  }
+}, [peer]);
 
 
 useEffect(()=>{
   peer.addEventListener('track',handleSendVideo);
   return ()=>{
     peer.removeEventListener('track',handleSendVideo);
-    
+    disconnect();
   }
-
-},[peer,handleSendVideo]);
+},[peer,handleSendVideo,disconnect]);
 
 
   return (
-    <PeerContext.Provider value={{ peer , createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream,setting,setSetting,cons,setCons}}>
+    <PeerContext.Provider value={{ peer ,disconnect, createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream,setting,setSetting,cons,setCons}}>
       {props.children}
     </PeerContext.Provider>
   );
