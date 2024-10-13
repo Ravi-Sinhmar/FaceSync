@@ -35,7 +35,7 @@ function JoinMeet() {
     setRemoteAnswer,
     sendVideo,
     remoteStream,
-    setting,setSetting,cons
+    setting,setSetting,cons,disconnect
   } = usePeer();
 
   const handleInputChange = (event) => {
@@ -181,6 +181,8 @@ const startAdminSocket = useCallback(() => {
     }
   };
 
+
+
   const getRemoteVideo = useCallback(()=>{
     if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = remoteStream;
@@ -313,10 +315,14 @@ return () => {
         </div>
         <div className="flex justify-between items-center px-10 py-4 bg-blm rounded-lg h-fit">
         <button onClick={toggleMic}>
-          Stop Audio
+          Toggle Audio
         </button>
         <button onClick={toggleVideo}>
-          Stop Audio
+          Toggle Video
+        </button>
+
+        <button onClick={disconnect}>
+          Cut Calll
         </button>
         
         </div>
