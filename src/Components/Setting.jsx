@@ -6,6 +6,7 @@ function Setting({localVideoRef}) {
     const audioInputEl = useRef(null);
     const audioOutputEl =useRef(null);
     const videoInputEl =useRef(null);
+    const errV =useRef(null);
     const getDevices = useCallback(async()=>{
         try{
             const devices = await navigator.mediaDevices.enumerateDevices();
@@ -75,6 +76,7 @@ function Setting({localVideoRef}) {
             alert("in catcch")
             console.log(err)
             alert(err);
+            errV.current.innerText = err;
         }
        
     }
@@ -84,6 +86,7 @@ function Setting({localVideoRef}) {
     <button onClick={() => {
   setSetting(false);
 }}>Done</button>
+<h6 ref={errV}>Error</h6>
              <div>
                 <label>Select audio input: </label>
                 <select onChange={changeAudioInput} ref={audioInputEl} id="audio-input"></select>
