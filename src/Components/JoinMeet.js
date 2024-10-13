@@ -137,31 +137,11 @@ const startAdminSocket = useCallback(() => {
     };
   }, [adminSocket, userSocket]);
 
-  const handleNeg = useCallback(async () => {
-    alert("nego need");
-    const wsMessage = {
-      admin:true,
-      cleanUserName: adminCon,
-      fullUserName:"updateMe",
-      cleanFriendName : "updateMe",
-      fullFiendName:"updateMe",
-    };
-    const UwsMessage = {
-      admin:false,
-      cleanUserName: userName,
-      fullUserName:fullName,
-      cleanFriendName :adminCon,
-      fullFiendName:"updateMe",
-    };
-    
-    adminSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
-    userSocket.send(JSON.stringify({ ...UwsMessage,type:"UnegNeed"}));
-  }, [adminCon,adminSocket,userSocket,fullName,userName]);
+
 
   const getMyVideo = useCallback(async () => {
     try {
-      alert("stream ch");
-      handleNeg();
+      
       setMyVideo(stream);
       console.log('Video tracks:', stream.getVideoTracks());
       console.log('Audio tracks:', stream.getAudioTracks());
@@ -173,7 +153,7 @@ const startAdminSocket = useCallback(() => {
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
-  }, [stream,handleNeg]);
+  }, [stream]);
   useEffect(() => {
     getMyVideo();
   }, [getMyVideo]);
@@ -201,7 +181,7 @@ if(adminSocketStatus){
   const adminMessageListener =async (event)=>{
     const data = JSON.parse(event.data);
     // if Someone Reset or Refresh or Firsttime going on link
- if (data.type === "userOn" || data.type === "UnegNeed") {
+ if (data.type === "userOn" || data.type === "askingOffer") {
   const offer = await createOffer();
   setFinalOffer(offer);
   adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingOffer",content: offer}));
@@ -240,7 +220,7 @@ if(userSocketStatus && joined){
     const data = JSON.parse(event.data);
     // If admin Reset or refresh
     if (data.type === "adminOn") {
-    userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
+    userSocket.send(JSON.stringify({ ...wsMessage,type:"askingOffer"}));
      };
 
      // If getting offer
@@ -264,7 +244,18 @@ return () => {
 }
   },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,setSetting]);
 
-
+  const handleNeg = useCallback(async () => {
+    console.log("nego need");
+    const wsMessage = {
+      admin:true,
+      cleanUserName: adminCon,
+      fullUserName:"updateMe",
+      cleanFriendName : "updateMe",
+      fullFiendName:"updateMe",
+    };
+    const offer = await createOffer();
+    adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: offer}));
+  }, [adminCon,adminSocket,createOffer]);
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
@@ -281,7 +272,7 @@ return () => {
 
   return (
     <React.Fragment>
-      {true ? (
+      {true ?(
         <div className="bg-blf w-svw h-svh flex flex-col justify-between overflow-hidden">
           <video ref={localVideoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
         <div className="flex flex-col justify-center items-center h-full">
