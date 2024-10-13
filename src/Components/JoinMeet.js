@@ -137,11 +137,31 @@ const startAdminSocket = useCallback(() => {
     };
   }, [adminSocket, userSocket]);
 
-
+  const handleNeg = useCallback(async () => {
+    alert("nego need");
+    const wsMessage = {
+      admin:true,
+      cleanUserName: adminCon,
+      fullUserName:"updateMe",
+      cleanFriendName : "updateMe",
+      fullFiendName:"updateMe",
+    };
+    const UwsMessage = {
+      admin:false,
+      cleanUserName: userName,
+      fullUserName:fullName,
+      cleanFriendName :adminCon,
+      fullFiendName:"updateMe",
+    };
+    
+    adminSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
+    userSocket.send(JSON.stringify({ ...UwsMessage,type:"UnegNeed"}));
+  }, [adminCon,adminSocket,userSocket,fullName,userName]);
 
   const getMyVideo = useCallback(async () => {
     try {
       alert("stream ch");
+      handleNeg();
       setMyVideo(stream);
       console.log('Video tracks:', stream.getVideoTracks());
       console.log('Audio tracks:', stream.getAudioTracks());
@@ -153,7 +173,7 @@ const startAdminSocket = useCallback(() => {
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
-  }, [stream]);
+  }, [stream,handleNeg]);
   useEffect(() => {
     getMyVideo();
   }, [getMyVideo]);
@@ -244,26 +264,7 @@ return () => {
 }
   },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,setSetting]);
 
-  const handleNeg = useCallback(async () => {
-    alert("nego need");
-    const wsMessage = {
-      admin:true,
-      cleanUserName: adminCon,
-      fullUserName:"updateMe",
-      cleanFriendName : "updateMe",
-      fullFiendName:"updateMe",
-    };
-    const UwsMessage = {
-      admin:false,
-      cleanUserName: userName,
-      fullUserName:fullName,
-      cleanFriendName :adminCon,
-      fullFiendName:"updateMe",
-    };
-    const offer = await createOffer();
-    adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: offer}));
-    userSocket.send(JSON.stringify({ ...UwsMessage,type:"UnegNeed"}));
-  }, [adminCon,adminSocket,createOffer,userSocket,fullName,userName]);
+
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
