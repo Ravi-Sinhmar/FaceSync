@@ -246,11 +246,9 @@ if(adminSocketStatus){
 };
       };
 
-if(!handShake){
-  adminSocket.send(JSON.stringify({ ...wsMessage,type:"adminOn"}));
-  setHandShake(true);
 
-}
+  adminSocket.send(JSON.stringify({ ...wsMessage,type:"adminOn"}));
+
    // Listening for messages 
    adminSocket.addEventListener("message", adminMessageListener);
   return () => {
@@ -282,10 +280,9 @@ if(userSocketStatus && joined){
      if (data.type === "sendingOffer") {
       const answer = await createAnswer(data.content);
       userSocket.send(JSON.stringify({ ...wsMessage,type:"sendingAnswer", content: answer}));
-if(!handShake2){
+
   userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
-  setHandShake2(true);
-};
+  
        };
 
          // If neg need
@@ -294,16 +291,15 @@ if(!handShake2){
       userSocket.send(JSON.stringify({ ...wsMessage,type:"negAnswer", content: answer}));
        };
             };
-      if(!handShake){
+     
         userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
-        setHandShake(true);
-      };
+        
   userSocket.addEventListener("message", userMessageListener);
 return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,handShake,handShake2]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,handShake2]);
 
   const handleNeg = useCallback(async () => {
    console.log("nego need");
