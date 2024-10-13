@@ -2,10 +2,12 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFriend } from "./../Contexts/Friend";
 import { usePeer } from "./../Contexts/Peer";
+import { useNavigate } from 'react-router-dom';
 
 import Setting from "./Setting";
 
 function JoinMeet() {
+  const navigate = useNavigate();
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
   const [adminName, setAdminName] = useState(null);
@@ -181,6 +183,10 @@ const startAdminSocket = useCallback(() => {
     }
   };
 
+  const cutCall = ()=>{
+    disconnect();
+    navigate("/")
+  }
 
 
   const getRemoteVideo = useCallback(()=>{
@@ -321,7 +327,7 @@ return () => {
           Toggle Video
         </button>
 
-        <button onClick={disconnect}>
+        <button onClick={cutCall}>
           Cut Calll
         </button>
         
