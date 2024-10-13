@@ -28,6 +28,7 @@ function JoinMeet() {
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isRemoteAudioEnabled, setIsRemoteAudioEnabled] = useState(true);
   const [handShake, setHandShake] = useState(false);
+  const [handShake2, setHandShake2] = useState(false);
  
   // contexts
   const {adminCon, setAdminCon} = useFriend();
@@ -224,8 +225,12 @@ if(adminSocketStatus){
   };
   const adminMessageListener =async (event)=>{
     const data = JSON.parse(event.data);
+        // if Someone Reset or Refresh or Firsttime going on link
+ if (data.type === "userOn") {
+  adminSocket.send(JSON.stringify({ ...wsMessage,type:"adminOn2"}));
+ };
     // if Someone Reset or Refresh or Firsttime going on link
- if (data.type === "userOn" || data.type === "askingOffer") {
+ if (data.type === "userOn2" || data.type === "askingOffer") {
   const offer = await createOffer();
   adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingOffer",content: offer}));
  };
@@ -263,8 +268,13 @@ if(userSocketStatus && joined){
   };
   const userMessageListener = async(event)=>{
     const data = JSON.parse(event.data);
+      // If admin Reset or refresh
+      if (data.type === "adminOn") {
+        userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn2"}));
+         };
+
     // If admin Reset or refresh
-    if (data.type === "adminOn") {
+    if (data.type === "adminOn2") {
     userSocket.send(JSON.stringify({ ...wsMessage,type:"askingOffer"}));
      };
      // If getting offer
