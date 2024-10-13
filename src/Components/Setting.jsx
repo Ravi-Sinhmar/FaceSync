@@ -4,7 +4,6 @@ function Setting({localVideoRef}) {
     const audioInputEl = useRef(null);
     const audioOutputEl =useRef(null);
     const videoInputEl =useRef(null);
-    const errV =useRef(null);
     const {setSetting,setCons} = usePeer();
     const getStream = useCallback(async () => {
         try{
@@ -75,7 +74,7 @@ function Setting({localVideoRef}) {
         // Final Code 
       <div className="w-svw h-svh flex items-center justify-center">
         <div className="flex flex-col sm:w-1/2 md:w-1/4 h-full bg-blt py-5  pb-12 px-5 justify-between items-center gap-10">
-        <div className="flex flex-col  items-center gap-8">
+        <div className="flex flex-col items-center w-full gap-8">
         <button onClick={() => {
   setSetting("ok");
 }}  className="flex  items-center w-full  rounded-md  ">
@@ -84,40 +83,25 @@ function Setting({localVideoRef}) {
     </svg>
             
             </button>
-       <div className="flex flex-col gap-3 justify-between ">
+       <div className="flex flex-col gap-3 w-full justify-between ">
          <label className=" font-[500] text-blf">Audio Input(Mic)</label>
          <select onChange={changeAudioInput} ref={audioInputEl} className=" text-blt px-2  ring-1 ring-gray-500 bg-blg rounded-md w-full text-sm  py-3 "  id="audio-input">
-           <option value="Option1" key="1">
-             CAM - 1 , Defaul Functon why are  you askiing to do  some theing
-           </option>
-           <option value="Option1" key="2">
-             Hi2
-           </option>
+          
          </select>
        </div>
        {/* Sound Output */}
-       <div className="flex flex-col gap-3 justify-between ">
+       <div className="flex flex-col gap-3 w-full justify-between ">
          <label className="text-blf font-[500] ">Sound Output(Speaker)</label>
          <select onChange={changeAudioOutput} ref={audioOutputEl} className=" text-blt px-2  ring-1 ring-gray-500 bg-blg rounded-md w-full text-sm  py-3 "  id="audio-input">
-           <option value="Option1" key="1">
-             CAM - 1 , Defaul Functon why are  you askiing to do  some theing
-           </option>
-           <option value="Option1" key="2">
-             Hi2
-           </option>
+          
          </select>
        </div>
  
        {/* Camera Type */}
-       <div className="flex flex-col gap-3 justify-between ">
+       <div className="flex flex-col gap-3 w-full justify-between ">
          <label className="text-blf font-[500]">Camera Type</label>
          <select onChange={changeVideo} ref={videoInputEl} className=" text-blt px-2  ring-1 ring-gray-500 bg-blg rounded-md w-full text-sm  py-3 "  id="audio-input">
-           <option value="Option1" key="1">
-             CAM - 1 , Defaul Functon why are  you askiing to do  some theing
-           </option>
-           <option value="Option1" key="2">
-             Hi2
-           </option>
+    
          </select>
        </div>
      
