@@ -24,6 +24,7 @@ function JoinMeet() {
   const [userSocketStatus, setUserSocketStatus] = useState(false);
   const [myVideo, setMyVideo] = useState(null);
   const [isMicEnabled, setIsMicEnabled] = useState(true);
+  const [isVideoEnabled, setIsVideoEnabled] = useState(true);
  
   // contexts
   const {adminCon, setAdminCon} = useFriend();
@@ -172,6 +173,13 @@ const startAdminSocket = useCallback(() => {
     }
   };
 
+  const toggleVideo = () => {
+    if (myVideo) {
+      const videoTrack = myVideo.getVideoTracks()[0];
+      videoTrack.enabled = !isVideoEnabled;
+      setIsVideoEnabled(!isVideoEnabled);
+    }
+  };
 
   const getRemoteVideo = useCallback(()=>{
     if (remoteVideoRef.current) {
@@ -307,6 +315,10 @@ return () => {
         <button onClick={toggleMic}>
           Stop Audio
         </button>
+        <button onClick={toggleVideo}>
+          Stop Audio
+        </button>
+        
         </div>
         </div>
       ) : <Setting localVideoRef={localVideoRef} />
