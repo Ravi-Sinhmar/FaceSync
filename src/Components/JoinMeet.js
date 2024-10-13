@@ -141,7 +141,7 @@ const startAdminSocket = useCallback(() => {
 
   const getMyVideo = useCallback(async () => {
     try {
-      
+      console.log("stream chnaged");
       setMyVideo(stream);
       console.log('Video tracks:', stream.getVideoTracks());
       console.log('Audio tracks:', stream.getAudioTracks());
