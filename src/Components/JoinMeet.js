@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFriend } from "./../Contexts/Friend";
 import { usePeer } from "./../Contexts/Peer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 import Setting from "./Setting";
 
@@ -28,10 +28,9 @@ function JoinMeet() {
   const [isMicEnabled, setIsMicEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isRemoteAudioEnabled, setIsRemoteAudioEnabled] = useState(true);
-  const [isSwapping, setIsSwapping] = useState(false);
-
+ 
   // contexts
-  const { adminCon, setAdminCon } = useFriend();
+  const {adminCon, setAdminCon} = useFriend();
   const {
     peer,
     createOffer,
@@ -39,11 +38,7 @@ function JoinMeet() {
     setRemoteAnswer,
     sendVideo,
     remoteStream,
-    setting,
-    setSetting,
-    cons,
-    disconnect,
-    setRemoteStream,
+    setting,setSetting,cons,disconnect
   } = usePeer();
 
   const handleInputChange = (event) => {
@@ -52,6 +47,7 @@ function JoinMeet() {
     uName = uName.toLowerCase().replace(/\s+/g, "");
     setUserName(uName);
   };
+
 
   const seeMeet = useCallback(() => {
     const ad = searchParams.get("adminName");
@@ -80,35 +76,37 @@ function JoinMeet() {
         })
         .catch((err) => console.log(err));
     }
-  }, [searchParams, setAdminCon, adminName, meetingId]);
+  }, [searchParams,setAdminCon,adminName,meetingId]);
   useEffect(() => {
     seeMeet();
-  }, [seeMeet]);
+  },[seeMeet]);
 
-  useEffect(() => {
-    if (setting === "ok") {
+
+  useEffect(()=>{
+    if(setting === "ok"){
       setNeedWebSocket(true);
     }
-  }, [setting]);
+  },[setting]);
 
-  const startAdminSocket = useCallback(() => {
-    if (needWebSocket && admin) {
-      const newSocket = new WebSocket(
-        `wss://facesyncbackend.onrender.com/?fullMeetId=${adminName}${meetingId}&deviceName=${adminName}`
-      );
-      setAdminSocket(newSocket);
-    }
+
+const startAdminSocket = useCallback(() => {
+      if (needWebSocket && admin) {
+        const newSocket = new WebSocket(
+          `wss://facesyncbackend.onrender.com/?fullMeetId=${adminName}${meetingId}&deviceName=${adminName}`
+        );
+        setAdminSocket(newSocket);
+      }
   }, [needWebSocket, admin, adminName, meetingId]);
 
   const startUserSocket = useCallback(() => {
     if (needWebSocket && user && joined) {
-      const cleanName = userName.toLowerCase().replace(/\s+/g, "");
-      const newSocket = new WebSocket(
-        `wss://facesyncbackend.onrender.com/?fullMeetId=${cleanName}${meetingId}&deviceName=${userName}`
-      );
-      setUserSocket(newSocket);
+        const cleanName = userName.toLowerCase().replace(/\s+/g, "");
+        const newSocket = new WebSocket(
+          `wss://facesyncbackend.onrender.com/?fullMeetId=${cleanName}${meetingId}&deviceName=${userName}`
+        );
+        setUserSocket(newSocket);
     }
-  }, [needWebSocket, meetingId, userName, user, joined]);
+  }, [needWebSocket, meetingId, userName, user,joined]);
 
   useEffect(() => {
     startUserSocket();
@@ -125,7 +123,7 @@ function JoinMeet() {
   const handleUserSocketStatus = () => {
     setUserSocketStatus(true);
   };
-
+  
   useEffect(() => {
     if (adminSocket !== null) {
       adminSocket.addEventListener("open", handleAdminSocketStatus);
@@ -147,26 +145,28 @@ function JoinMeet() {
     };
   }, [adminSocket, userSocket]);
 
+
+
   const getMyVideo = useCallback(async () => {
     try {
       const st = await navigator.mediaDevices.getUserMedia(cons);
       setMyVideo(st);
-      console.log("Video tracks:", st.getVideoTracks());
-      console.log("Audio tracks:", st.getAudioTracks());
-
+      console.log('Video tracks:', st.getVideoTracks());
+      console.log('Audio tracks:', st.getAudioTracks());
+  
       // Set the video source to the `videoRef`
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = st;
       }
     } catch (error) {
-      console.error("Error accessing camera:", error);
+      console.error('Error accessing camera:', error);
     }
   }, [cons]);
-
+  
   useEffect(() => {
-    if (setting === "ok");
+    if( setting === "ok");
     getMyVideo();
-  }, [getMyVideo, setting]);
+  }, [getMyVideo,setting]);
 
   const toggleMic = () => {
     if (myVideo) {
@@ -192,161 +192,111 @@ function JoinMeet() {
     }
   };
 
-  const cutCall = () => {
+  const cutCall = ()=>{
     disconnect();
-    navigate("/");
+    navigate("/")
   };
 
   // Swaping videos
-  useEffect(() => {
-    const handleVideoClick = () => {
-      if (isSwapping) {
-        return; // Prevent multiple swaps
-      }
+  
 
-      setIsSwapping(true);
 
-      // Swap video streams
-      const tempStream = myVideo;
-      setMyVideo(remoteStream);
-      setRemoteStream(tempStream);
-
-      // Update video elements
-      localVideoRef.current.srcObject = remoteStream;
-      remoteVideoRef.current.srcObject = myVideo;
-
-      setIsSwapping(false);
-    };
-    localVideoRef.current.addEventListener("click", handleVideoClick);
-    return () => {
-      localVideoRef.removeEventListener("click", handleVideoClick);
-    };
-  }, [myVideo, remoteStream, isSwapping,setRemoteStream]);
-
-  const getRemoteVideo = useCallback(() => {
+  const getRemoteVideo = useCallback(()=>{
     if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = remoteStream;
     }
-  }, [remoteStream]);
+  },[remoteStream]);
 
-  useEffect(() => {
+  useEffect(()=>{
     getRemoteVideo();
-  }, [getRemoteVideo]);
+  },[getRemoteVideo]);
 
-  useEffect(() => {
-    if (adminSocketStatus) {
-      const wsMessage = {
-        admin: true,
-        cleanUserName: adminCon,
-        fullUserName: "updateMe",
-        cleanFriendName: "updateMe",
-        fullFiendName: "updateMe",
-      };
-      const adminMessageListener = async (event) => {
-        const data = JSON.parse(event.data);
-        // if Someone Reset or Refresh or Firsttime going on link
-        if (data.type === "userOn" || data.type === "askingOffer") {
-          const offer = await createOffer();
-          setFinalOffer(offer);
-          adminSocket.send(
-            JSON.stringify({
-              ...wsMessage,
-              type: "sendingOffer",
-              content: offer,
-            })
-          );
-        }
-        //  Getting Anser
-        if (data.type === "sendingAnswer") {
-          await setRemoteAnswer(data.content);
-        }
+  useEffect(()=>{
+if(adminSocketStatus){
+  const wsMessage = {
+    admin:true,
+    cleanUserName: adminCon,
+    fullUserName:"updateMe",
+    cleanFriendName : "updateMe",
+    fullFiendName:"updateMe",
+  };
+  const adminMessageListener =async (event)=>{
+    const data = JSON.parse(event.data);
+    // if Someone Reset or Refresh or Firsttime going on link
+ if (data.type === "userOn" || data.type === "askingOffer") {
+  const offer = await createOffer();
+  setFinalOffer(offer);
+  adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingOffer",content: offer}));
+ };
+//  Getting Anser
+ if (data.type === "sendingAnswer") {
+  await setRemoteAnswer(data.content);
+ };
 
-        //  neg Anser
-        if (data.type === "negAnswer") {
-          await setRemoteAnswer(data.content);
-        }
+ //  neg Anser
+ if (data.type === "negAnswer") {
+   await setRemoteAnswer(data.content);
+};
       };
 
-      adminSocket.send(JSON.stringify({ ...wsMessage, type: "adminOn" }));
-      // Listening for messages
-      adminSocket.addEventListener("message", adminMessageListener);
-      return () => {
-        adminSocket.removeEventListener("message", adminMessageListener);
-      };
-    }
 
-    if (userSocketStatus && joined) {
-      const wsMessage = {
-        admin: false,
-        cleanUserName: userName,
-        fullUserName: fullName,
-        cleanFriendName: adminCon,
-        fullFiendName: "updateMe",
-      };
-      const userMessageListener = async (event) => {
-        const data = JSON.parse(event.data);
-        // If admin Reset or refresh
-        if (data.type === "adminOn") {
-          userSocket.send(
-            JSON.stringify({ ...wsMessage, type: "askingOffer" })
-          );
-        }
+  adminSocket.send(JSON.stringify({ ...wsMessage,type:"adminOn"}));
+   // Listening for messages 
+   adminSocket.addEventListener("message", adminMessageListener);
+  return () => {
+    adminSocket.removeEventListener("message", adminMessageListener);
+  };
 
-        // If getting offer
-        if (data.type === "sendingOffer") {
-          const answer = await createAnswer(data.content);
-          userSocket.send(
-            JSON.stringify({
-              ...wsMessage,
-              type: "sendingAnswer",
-              content: answer,
-            })
-          );
-        }
+};
 
-        // If neg need
-        if (data.type === "negNeed") {
-          const answer = await createAnswer(data.content);
-          userSocket.send(
-            JSON.stringify({ ...wsMessage, type: "negAnswer", content: answer })
-          );
-        }
-      };
+if(userSocketStatus && joined){
+  const wsMessage = {
+    admin:false,
+    cleanUserName: userName,
+    fullUserName:fullName,
+    cleanFriendName :adminCon,
+    fullFiendName:"updateMe",
+  };
+  const userMessageListener = async(event)=>{
+    const data = JSON.parse(event.data);
+    // If admin Reset or refresh
+    if (data.type === "adminOn") {
+    userSocket.send(JSON.stringify({ ...wsMessage,type:"askingOffer"}));
+     };
 
-      userSocket.send(JSON.stringify({ ...wsMessage, type: "userOn" }));
-      userSocket.addEventListener("message", userMessageListener);
-      return () => {
-        userSocket.removeEventListener("message", userMessageListener);
-      };
-    }
-  }, [
-    adminSocketStatus,
-    userSocketStatus,
-    adminCon,
-    adminSocket,
-    userSocket,
-    userName,
-    joined,
-    fullName,
-    createAnswer,
-    createOffer,
-    setRemoteAnswer,
-  ]);
+     // If getting offer
+     if (data.type === "sendingOffer") {
+      const answer = await createAnswer(data.content);
+      userSocket.send(JSON.stringify({ ...wsMessage,type:"sendingAnswer", content: answer}));
+       };
+
+         // If neg need
+     if (data.type === "negNeed") {
+      const answer = await createAnswer(data.content)
+      userSocket.send(JSON.stringify({ ...wsMessage,type:"negAnswer", content: answer}));
+       };
+            };
+
+  userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
+  userSocket.addEventListener("message", userMessageListener);
+return () => {
+  userSocket.removeEventListener("message", userMessageListener);
+};
+}
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer]);
 
   const handleNeg = useCallback(async () => {
     console.log("nego need");
     const wsMessage = {
-      admin: true,
+      admin:true,
       cleanUserName: adminCon,
-      fullUserName: "updateMe",
-      cleanFriendName: "updateMe",
-      fullFiendName: "updateMe",
+      fullUserName:"updateMe",
+      cleanFriendName : "updateMe",
+      fullFiendName:"updateMe",
     };
     const offer = await createOffer();
-    adminSocket.send(
-      JSON.stringify({ ...wsMessage, type: "negNeed", content: offer })
-    );
-  }, [adminCon, adminSocket, createOffer]);
+    adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: offer}));
+  }, [adminCon,adminSocket,createOffer]);
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
@@ -355,62 +305,54 @@ function JoinMeet() {
     };
   }, [handleNeg, peer]);
 
-  useEffect(() => {
+ useEffect(() => {
     if (setting === "ok") {
       sendVideo(myVideo);
     }
-  }, [sendVideo, myVideo, setting]);
+  }, [sendVideo, myVideo,setting]);
 
   return (
     <React.Fragment>
-      {setting === "ok" ? (
+      {setting === "ok" ?(
         <div className="bg-blf w-svw h-svh flex flex-col justify-between overflow-hidden">
-          <video
-            ref={localVideoRef}
-            muted
-            autoPlay
-            playsInline
-            className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"
-          ></video>
-          <div className="flex flex-col justify-center items-center h-full">
-            <video
-              ref={remoteVideoRef}
-              autoPlay
-              playsInline
-              className="rounded-md object-cover w-full h-full "
-            ></video>
-            {user && !joined ? (
-              <React.Fragment>
-                {" "}
-                <input
-                  value={userName}
-                  onChange={handleInputChange}
-                  placeholder="Your name please"
-                  className="border border-blt rounded-md py-2 bg-blm"
-                  type="text"
-                />
-                <button
-                  onClick={() => {
-                    setJoined(true);
-                  }}
-                >
-                  JOIN
-                </button>
-              </React.Fragment>
-            ) : null}
-          </div>
-          <div className="flex justify-between items-center px-10 py-4 bg-blm rounded-lg h-fit">
-            <button onClick={toggleMic}>Toggle Audio</button>
-            <button onClick={toggleVideo}>Toggle Video</button>
-
-            <button onClick={cutCall}>Cut Calll</button>
-
-            <button onClick={toggleRemoteAudio}>Speaker Off</button>
-          </div>
+          <video ref={localVideoRef} muted autoPlay playsInline className="absolute right-2 top-2 rounded-md object-cover h-24 w-16"></video>
+        <div className="flex flex-col justify-center items-center h-full">
+        <video ref={remoteVideoRef}  autoPlay playsInline className="rounded-md object-cover w-full h-full "></video>
+        {user && !joined ? (<React.Fragment> <input
+                value={userName}
+                onChange={handleInputChange}
+                placeholder="Your name please"
+                className="border border-blt rounded-md py-2 bg-blm"
+                type="text"
+              />
+              <button onClick={()=>{setJoined(true)}} >JOIN</button>
+        
+            </React.Fragment>
+          ) : null}
+          
         </div>
-      ) : (
-        <Setting localVideoRef={localVideoRef} />
-      )}
+        <div className="flex justify-between items-center px-10 py-4 bg-blm rounded-lg h-fit">
+        <button onClick={toggleMic}>
+          Toggle Audio
+        </button>
+        <button onClick={toggleVideo}>
+          Toggle Video
+        </button>
+
+        <button onClick={cutCall}>
+          Cut Calll
+        </button>
+
+        <button onClick={toggleRemoteAudio}>
+         Speaker Off
+        </button>
+
+        
+        </div>
+        </div>
+      ) : <Setting localVideoRef={localVideoRef} />
+      }
+      
     </React.Fragment>
   );
 }
