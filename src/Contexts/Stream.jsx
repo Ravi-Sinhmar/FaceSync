@@ -7,7 +7,6 @@ const MyContext = React.createContext(null);
 function StreamProvider(props){
   const [stream,setStream] = useState(null);
   const [setting, setSetting] = useState(false);
-  const [test, setTest] = useState(false);
   const [constraints,setConstraints] = useState({
     video: true,
     audio: true,
@@ -19,19 +18,16 @@ function StreamProvider(props){
     console.log(st);
     const tracks = st.getTracks();
     console.log(tracks);
-    setStream(st);
 }catch(err){
     console.log(err)
-}},[constraints]);
+}},[]);
 
 useEffect(()=>{
-    if(test){
-        getStream();
-    }
-},[getStream,test]);
+    getStream();
+},[getStream]);
 
     return(
-        <MyContext.Provider value={{constraints,setConstraints,stream,setStream,setting,setSetting,test,setTest}}>
+        <MyContext.Provider value={{constraints,setConstraints,stream,setStream,setting,setSetting}}>
             {props.children}
         </MyContext.Provider>
     )

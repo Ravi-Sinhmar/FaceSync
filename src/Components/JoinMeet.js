@@ -26,11 +26,10 @@ function JoinMeet() {
   const [userSocketStatus, setUserSocketStatus] = useState(false);
   const [myVideo, setMyVideo] = useState(null);
   
-  
  
   // contexts
-  const {stream, setStream , constraints , setConstraints ,setting,setSetting,test,setTest} = useStream();
-  const {adminCon, setAdminCon} = useFriend();
+  const {stream, setStream , constraints , setConstraints ,setting,setSetting} = useStream();
+  const {adminCon, setAdminCon } = useFriend();
   const {
     peer,
     createOffer,
@@ -39,17 +38,6 @@ function JoinMeet() {
     sendVideo,
     remoteStream,
   } = usePeer();
-
-const testStream = useCallback(async()=>{
-const tStream = await navigator.mediaDevices.getUserMedia({video:true,audio:true});
-if(tStream){
-  setSetting(true);
-}
-  },[setSetting]);
-
-useEffect(()=>{
-testStream();
-},[testStream]);
 
   const handleInputChange = (event) => {
     let uName = event.target.value;
@@ -94,23 +82,23 @@ testStream();
 
 
 const startAdminSocket = useCallback(() => {
-      if (needWebSocket && admin && test) {
+      if (needWebSocket && admin) {
         const newSocket = new WebSocket(
           `wss://facesyncbackend.onrender.com/?fullMeetId=${adminName}${meetingId}&deviceName=${adminName}`
         );
         setAdminSocket(newSocket);
       }
-  }, [needWebSocket, admin, adminName, meetingId,test]);
+  }, [needWebSocket, admin, adminName, meetingId]);
 
   const startUserSocket = useCallback(() => {
-    if (needWebSocket && user && joined && test) {
+    if (needWebSocket && user && joined) {
         const cleanName = userName.toLowerCase().replace(/\s+/g, "");
         const newSocket = new WebSocket(
           `wss://facesyncbackend.onrender.com/?fullMeetId=${cleanName}${meetingId}&deviceName=${userName}`
         );
         setUserSocket(newSocket);
     }
-  }, [needWebSocket, meetingId, userName, user,joined,test]);
+  }, [needWebSocket, meetingId, userName, user,joined]);
 
   useEffect(() => {
     startUserSocket();
@@ -153,6 +141,7 @@ const startAdminSocket = useCallback(() => {
 
   const getMyVideo = useCallback(async () => {
     try {
+      
       setMyVideo(stream);
       console.log('Video tracks:', stream.getVideoTracks());
       console.log('Audio tracks:', stream.getAudioTracks());
@@ -164,12 +153,10 @@ const startAdminSocket = useCallback(() => {
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
-  }, [stream]);
+  }, [stream,setSetting]);
   useEffect(() => {
-    if(stream){
-      getMyVideo();
-    }
-  }, [getMyVideo,stream]);
+    getMyVideo();
+  }, [getMyVideo]);
 
 
   const getRemoteVideo = useCallback(()=>{
@@ -269,6 +256,7 @@ return () => {
     const offer = await createOffer();
     adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: offer}));
   }, [adminCon,adminSocket,createOffer]);
+
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
     return () => {
@@ -277,10 +265,10 @@ return () => {
   }, [handleNeg, peer]);
 
  useEffect(() => {
-    if (handShake && test) {
+    if (handShake) {
       sendVideo(myVideo);
     }
-  }, [handShake, sendVideo, myVideo,test]);
+  }, [handShake, sendVideo, myVideo]);
 
   return (
     <React.Fragment>
