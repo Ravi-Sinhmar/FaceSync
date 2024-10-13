@@ -217,13 +217,11 @@ function JoinMeet() {
 
       setIsSwapping(false);
     };
-
     localVideoRef.current.addEventListener("click", handleVideoClick);
-
     return () => {
-      localVideoRef.current.removeEventListener("click", handleVideoClick);
+      localVideoRef.removeEventListener("click", handleVideoClick);
     };
-  }, [myVideo, remoteStream, isSwapping]);
+  }, [myVideo, remoteStream, isSwapping,setRemoteStream]);
 
   const getRemoteVideo = useCallback(() => {
     if (remoteVideoRef.current) {
