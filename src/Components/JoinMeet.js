@@ -181,7 +181,7 @@ if(adminSocketStatus){
   const adminMessageListener =async (event)=>{
     const data = JSON.parse(event.data);
     // if Someone Reset or Refresh or Firsttime going on link
- if (data.type === "userOn" || data.type === "askingOffer") {
+ if (data.type === "userOn" || data.type === "askingOffer" || data.type === "UnegNeed") {
   const offer = await createOffer();
   setFinalOffer(offer);
   adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingOffer",content: offer}));
@@ -253,9 +253,17 @@ return () => {
       cleanFriendName : "updateMe",
       fullFiendName:"updateMe",
     };
+    const UwsMessage = {
+      admin:false,
+      cleanUserName: userName,
+      fullUserName:fullName,
+      cleanFriendName :adminCon,
+      fullFiendName:"updateMe",
+    };
     const offer = await createOffer();
     adminSocket.send(JSON.stringify({ ...wsMessage,type:"negNeed",content: offer}));
-  }, [adminCon,adminSocket,createOffer]);
+    userSocket.send(JSON.stringify({ ...UwsMessage,type:"UnegNeed"}));
+  }, [adminCon,adminSocket,createOffer,userSocket,fullName,userName]);
 
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
