@@ -16,7 +16,6 @@ function JoinMeet() {
   const [meetingId, setMeetingId] = useState(null);
   const [needWebSocket, setNeedWebSocket] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [finalOffer, setFinalOffer] = useState(null);
   const [admin, setAdmin] = useState(false);
   const [user, setUser] = useState(false);
   const [joined, setJoined] = useState(false);
@@ -28,6 +27,7 @@ function JoinMeet() {
   const [isMicEnabled, setIsMicEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isRemoteAudioEnabled, setIsRemoteAudioEnabled] = useState(true);
+  const [handShake, setHandShake] = useState(false);
  
   // contexts
   const {adminCon, setAdminCon} = useFriend();
@@ -227,7 +227,6 @@ if(adminSocketStatus){
     // if Someone Reset or Refresh or Firsttime going on link
  if (data.type === "userOn" || data.type === "askingOffer") {
   const offer = await createOffer();
-  setFinalOffer(offer);
   adminSocket.send(JSON.stringify({ ...wsMessage,type:"sendingOffer",content: offer}));
  };
 //  Getting Anser
@@ -241,8 +240,11 @@ if(adminSocketStatus){
 };
       };
 
-
+if(handShake){
   adminSocket.send(JSON.stringify({ ...wsMessage,type:"adminOn"}));
+  setHandShake(false);
+
+}
    // Listening for messages 
    adminSocket.addEventListener("message", adminMessageListener);
   return () => {
@@ -265,7 +267,6 @@ if(userSocketStatus && joined){
     if (data.type === "adminOn") {
     userSocket.send(JSON.stringify({ ...wsMessage,type:"askingOffer"}));
      };
-
      // If getting offer
      if (data.type === "sendingOffer") {
       const answer = await createAnswer(data.content);
@@ -278,14 +279,16 @@ if(userSocketStatus && joined){
       userSocket.send(JSON.stringify({ ...wsMessage,type:"negAnswer", content: answer}));
        };
             };
-
-  userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
+      if(handShake){
+        userSocket.send(JSON.stringify({ ...wsMessage,type:"userOn"}));
+        setHandShake(false);
+      };
   userSocket.addEventListener("message", userMessageListener);
 return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,handShake]);
 
   const handleNeg = useCallback(async () => {
     console.log("nego need");
