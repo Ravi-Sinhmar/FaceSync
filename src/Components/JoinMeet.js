@@ -225,8 +225,7 @@ if(adminSocketStatus && signaling){
     const data = JSON.parse(event.data);
     if(data.type === "userLive"){
       alert("User is Live");
-const offer = await createOffer();
-adminSocket.send(JSON.stringify({admin:true,type:"adminOffer",content:offer}));
+adminSocket.send(JSON.stringify({admin:true,type:"adminLive",content:null}));
       }else if(data.type === "userAnswer"){
         await setRemoteAnswer(data.content);
 
