@@ -108,7 +108,7 @@ if(userSocketStatus){
     const data = JSON.parse(event.data);
     
     }
-    adminSocket.send(JSON.stringify({Message:"Hellow,from User"}));
+    useSocket.send(JSON.stringify({Message:"Hellow,from User"}));
       // Listening to Messages
    adminSocket.addEventListener("message", adminMessageListener);
   return () => {
@@ -188,7 +188,7 @@ return () => {
 
   // Jsx Code Start here 
   return (
-    <React.Fragment>
+    <div>
 {!isJoin ? (<React.Fragment> <input
 
                 ref={inputRef}
@@ -200,8 +200,7 @@ return () => {
             </React.Fragment>
           ) : null}
 
-
-      {isJoin ? (
+      {true ? (
         <div className="w-svw h-svh bg-blm  flex justify-center items-center ">
           <div className="bg-blf h-full sm:w-1/2 md:w-1/4   flex flex-col justify-between overflow-hidden relative px-2 pt-2">
             <video
@@ -342,7 +341,7 @@ return () => {
       ) : 
       null
       }
-    </React.Fragment>
+    </div>
   );
 }
 export default JoinMeet;
