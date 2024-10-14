@@ -1,57 +1,43 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useFriend } from "./../Contexts/Friend";
+import { usePeer } from "./../Contexts/Peer";
 import { useNavigate } from 'react-router-dom';
 
-
-// Components
 import Setting from "./Setting";
-
-// Contexts 
-import { usePeer } from "./../Contexts/Peer";
-import { useSocket } from "./../Contexts/Socket";
 
 
 function JoinMeet() {
   const navigate = useNavigate();
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
-  const [searchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams();
   const [myVideo, setMyVideo] = useState(null);
   const [isMicEnabled, setIsMicEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isRemoteAudioEnabled, setIsRemoteAudioEnabled] = useState(true);
-  const [isJoin,setIsJoin] = useState(false);
 
- 
-
-   // Contexts
-   const {adminName,setAdminName,meetingId,setMeetingId,setIsAdmin,setIsUser,userSocket,adminSocket,userSocketStatus,adminSocketStatus} = useSocket();
-  const{
+  // contexts
+  const {
     peer,
-    disconnect,
     createOffer,
     createAnswer,
     setRemoteAnswer,
     sendVideo,
     remoteStream,
-    setting,
-    setSetting,
-    cons,
-    setCons
+    setting,setSetting,cons,disconnect
   } = usePeer();
 
-  // Get the Name
   const handleInputChange = (event) => {
-    let aName = event.target.value;
-    setAdminName(aName);
+    let uName = event.target.value;
+    setFullName(uName);
+    uName = uName.toLowerCase().replace(/\s+/g, "");
+    setUserName(uName);
   };
 
    // Check if it's Admin or  User
   const seeMeet = useCallback(() => {
-    const meetId = searchParams.get("meetingId");
-    setMeetingId(meetId);
-    if(adminName){
-      const content = { adminName, meetingId:meetId };
+      const content = { adminName, meetingId };
       fetch(`https://facesyncbackend.onrender.com/seeMeet`, {
         method: "POST",
         credentials: "include",
@@ -67,21 +53,23 @@ function JoinMeet() {
             setIsUser(!data.token);
           }
           if (data.status === "fail") {
-            console.log("Fetch /seeMeet failed")
           }
         })
         .catch((err) => console.log(err));
-      }
-  }, [searchParams,adminName,setMeetingId,setIsAdmin,setIsUser]);
+    
+  }, [searchParams,adminName,meetingId]);
   
   useEffect(() => {
     seeMeet();
   },[seeMeet]);
 
 
+  useEffect(()=>{
+    if(setting === "ok"){
+    }
+  },[setting]);
 
 
-//  Collect My Stream 
   const getMyVideo = useCallback(async () => {
     try {
       const st = await navigator.mediaDevices.getUserMedia(cons);
@@ -100,57 +88,8 @@ function JoinMeet() {
   }, [getMyVideo]);
 
 
-  useEffect(()=>{
-if(userSocketStatus){
-  const adminMessageListener = async (event)=>{
-    const data = JSON.parse(event.data);
-    
-    }
-    adminSocket.send(JSON.stringify({Message:"Hellow,from User"}));
-      // Listening to Messages
-   adminSocket.addEventListener("message", adminMessageListener);
-  return () => {
-    adminSocket.removeEventListener("message", adminMessageListener);
-  };
-
-}
-if(adminSocketStatus){
-  const userMessageListener = async(event)=>{
-  const data = JSON.parse(event.data);
-
-          };
-   // Listening to Messages
-adminSocket.send(JSON.stringify({Message:"Hellow,from Admin"}));
-
-userSocket.addEventListener("message", userMessageListener);
-return () => {
-  userSocket.removeEventListener("message", userMessageListener);
-};
-}
-  },[adminSocketStatus,userSocketStatus,adminSocket,userSocket]);
-
-
-
-  // Don't Know
-  // const getRemoteVideo = useCallback(()=>{
-  //   if (remoteVideoRef.current) {
-  //     remoteVideoRef.current.srcObject = remoteStream;
-  //   }
-  // },[remoteStream]);
-
-  // useEffect(()=>{
-  //   getRemoteVideo();
-  // },[getRemoteVideo]);
-
-
-// Don't know where to use this code
-//  useEffect(() => {
-//       sendVideo(myVideo);
-//   }, [sendVideo,myVideo]);
-
-
-
-  // NavButton Functions..........
+  
+  // NavButton Functions
   const toggleMic = () => {
     if (myVideo) {
       const audioTrack = myVideo.getAudioTracks()[0];
@@ -183,23 +122,73 @@ return () => {
   const handleMore = useCallback(async()=>{
     setSetting("start");
   },[setSetting]);
+  
+
+
+  const getRemoteVideo = useCallback(()=>{
+    if (remoteVideoRef.current) {
+      remoteVideoRef.current.srcObject = remoteStream;
+    }
+  },[remoteStream]);
+
+  useEffect(()=>{
+    getRemoteVideo();
+  },[getRemoteVideo]);
+
+  useEffect(()=>{
+
+
+
+if(signaling){
+  const adminMessageListener = async (event)=>{
+    const data = JSON.parse(event.data);
+    
+    }
+
+      // Listening to Messages
+   adminSocket.addEventListener("message", adminMessageListener);
+  return () => {
+    adminSocket.removeEventListener("message", adminMessageListener);
+  };
+
+}
+
+
+if(joined && signaling){
+  const userMessageListener = async(event)=>{
+  const data = JSON.parse(event.data);
+ 
+          };
+
+
+   // Listening to Messages
+userSocket.addEventListener("message", userMessageListener);
+return () => {
+  userSocket.removeEventListener("message", userMessageListener);
+};
+}
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,handShake,reload]);
+
+const handleNeg = useCallback(async () => {
+  console.log("Need Neg");
+  }, []);
+  useEffect(() => {
+    peer.addEventListener("negotiationneeded", handleNeg);
+    return () => {
+      peer.removeEventListener("negotiationneeded", handleNeg);
+    };
+  }, [handleNeg, peer]);
+
+ useEffect(() => {
+      sendVideo(myVideo);
+  }, [sendVideo,myVideo]);
+
+
 
   // Jsx Code Start here 
   return (
     <React.Fragment>
-{!isJoin ? (<React.Fragment> <input
-                value={adminName}
-                onChange={handleInputChange}
-                placeholder="Your name please"
-                className="border border-blt rounded-md py-2 bg-blm"
-                type="text"
-              />
-              <button onClick={()=>{setIsJoin(true)}} >JOIN</button>
-            </React.Fragment>
-          ) : null}
-
-
-      {true  ? (
+      {setting === "ok" ? (
         <div className="w-svw h-svh bg-blm  flex justify-center items-center ">
           <div className="bg-blf h-full sm:w-1/2 md:w-1/4   flex flex-col justify-between overflow-hidden relative px-2 pt-2">
             <video
@@ -216,6 +205,17 @@ return () => {
                 playsInline
                 className="w-full h-full ring-2 ring-black bg-blm rounded-md  object-cover  "
               ></video>
+               {user && !joined ? (<React.Fragment> <input
+                value={userName}
+                onChange={handleInputChange}
+                placeholder="Your name please"
+                className="border border-blt rounded-md py-2 bg-blm"
+                type="text"
+              />
+              <button onClick={()=>{setJoined(true)}} >JOIN</button>
+        
+            </React.Fragment>
+          ) : null}
             </div>
             <div className="w-full bg-transparent  py-2 flex items-center justify-center">
               <div className="flex justify-between w-full rounded-md ring-2 ring-black items-center px-4 py-2 bg-blm h-fit ">

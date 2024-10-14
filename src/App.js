@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import StartMeet from "./Components/StartMeet";
 // import Test from "./Components/Test";
 import JoinMeet from "./Components/JoinMeet";
-import FriendProvider from './Contexts/Friend';
 import PeerProvider from './Contexts/Peer';
+import SocketProvider from "./Contexts/Socket";
+
 
 
 import "./App.css";
@@ -13,7 +14,7 @@ import "./index.css";
 function App() {
   return (
    
-    <FriendProvider>
+    <SocketProvider>
       <PeerProvider>
     <Router>
       <Routes>
@@ -23,7 +24,7 @@ function App() {
       </Routes>
     </Router>
     </PeerProvider>
-    </FriendProvider>
+    </SocketProvider>
    
 
   );
