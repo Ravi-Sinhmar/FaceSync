@@ -70,14 +70,10 @@ function SocketProvider(props) {
     return () => {
       if (adminSocket !== null) {
         adminSocket.removeEventListener("open", handleAdminSocketStatus);
-      } else {
-        return;
-      }
+      } ;
       if (userSocket !== null) {
         userSocket.removeEventListener("open", handleUserSocketStatus);
-      } else {
-        return;
-      }
+      } ;
     };
   }, [adminSocket, userSocket]);
 

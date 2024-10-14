@@ -105,7 +105,7 @@ function JoinMeet() {
 
 
   useEffect(()=>{
-if(userSocketStatus){
+if(userSocketStatus && useSocket){
   const adminMessageListener = async (event)=>{
 console.log("test msg user");
   
@@ -121,7 +121,7 @@ console.log("test msg out");
   };
 
 }
-if(adminSocketStatus){
+if(adminSocketStatus && adminSocket){
   const userMessageListener = async(event)=>{
   // const data = JSON.parse(event.data);
 console.log("test msg admins");
