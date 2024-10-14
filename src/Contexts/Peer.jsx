@@ -116,7 +116,7 @@ function PeerProvider(props) {
         setMainStream
       }}
     >
-            {props.children}  
+     {props.children}  
     </PeerContext.Provider>
   );
 }

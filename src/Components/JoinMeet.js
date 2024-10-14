@@ -53,7 +53,7 @@ function JoinMeet() {
     const meetId = searchParams.get("meetingId");
     setMeetingId(meetId);
     if(adminName){
-      const content = { adminName, meetingId:meetId };
+      const content = { adminName:adminName, meetingId:meetId };
       fetch(`https://facesyncbackend.onrender.com/seeMeet`, {
         method: "POST",
         credentials: "include",
@@ -65,6 +65,8 @@ function JoinMeet() {
         .then((data) => data.json())
         .then((data) => {
           if (data.status === "success") {
+            console.log("success");
+            console.log(data.token);
             setIsAdmin(data.token);
             setIsUser(!data.token);
           }
