@@ -437,6 +437,7 @@ const handleNeg = useCallback(async () => {
                   </svg>
                   More
                 </button>
+                <button onCanPlay={()=>window.location.reload()}>Reload</button>
               </div>
             </div>
           </div>
