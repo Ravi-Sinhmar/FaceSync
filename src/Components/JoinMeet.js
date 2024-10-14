@@ -224,7 +224,9 @@ if(adminSocketStatus && signaling){
   const adminMessageListener = async (event)=>{
     const data = JSON.parse(event.data);
     if(data.type === "userLive"){
-window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
       }else if(data.type === "userAnswer"){
         await setRemoteAnswer(data.content);
 
