@@ -103,6 +103,8 @@ function JoinMeet() {
   //   getMyVideo();
   // }, [getMyVideo]);
 
+  
+
 
   useEffect(()=>{
 if(userSocketStatus && useSocket){
@@ -113,7 +115,7 @@ console.log("test msg user");
 
 console.log("test msg out");
 
-  useSocket.send(JSON.stringify({Message:"Hellow,from User"}));
+  userSocket.send(JSON.stringify({Message:"Hellow,from User"}));
       // Listening to Messages
    adminSocket.addEventListener("message", adminMessageListener);
   return () => {
