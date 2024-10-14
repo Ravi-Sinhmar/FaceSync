@@ -228,13 +228,12 @@ const offer = await createOffer();
 adminSocket.send(JSON.stringify({admin:true,type:"adminOffer",content:offer}));
       }else if(data.type === "userAnswer"){
         await setRemoteAnswer(data.content);
-adminSocket.send(JSON.stringify({admin:true,type:"reload",content:null}));
+        window.location.reload();
+
 
       }else if(data.type === "userOffer"){
         const answer = await createAnswer(data.content);
 adminSocket.send(JSON.stringify({admin:true,type:"adminAnswer",content:answer}));
-      }else if(data.type === "reload"){
-        window.location.reload();
       }
     }
 // Sending First Message
@@ -262,10 +261,8 @@ if(userSocketStatus && joined && signaling){
   userSocket.send(JSON.stringify({admin:false,type:"userAnswer",content:answer}));
    }else if(data.type === "adminAnswer"){
   await setRemoteAnswer(data.content);
-  userSocket.send(JSON.stringify({admin:false,type:"reload",content:null}));
-   }else if(data.type === "reload"){
-    window.location.reload();
-  }
+ window.location.reload();
+   }
           };
 // Sending First Message
 if(!handShake){

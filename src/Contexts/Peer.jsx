@@ -65,7 +65,7 @@ const sendVideo = async (video)=>{
 const handleSendVideo = useCallback(async (event) => {
   const video = event.streams[0];
   console.log("Received remote stream:", video);
-  
+
   if (video) {
     const tracks = video.getTracks();
     if (tracks.length > 0) {
