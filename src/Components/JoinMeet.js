@@ -84,22 +84,22 @@ function JoinMeet() {
 
 
 //  Collect My Stream 
-  const getMyVideo = useCallback(async () => {
-    try {
-      const st = await navigator.mediaDevices.getUserMedia(cons);
-      setMyVideo(st);
-      // Set the video source to the `videoRef`
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = st;
-      }
-    } catch (error) {
-      console.error('Error accessing camera:', error);
-    }
-  }, [cons]);
+  // const getMyVideo = useCallback(async () => {
+  //   try {
+  //     const st = await navigator.mediaDevices.getUserMedia(cons);
+  //     setMyVideo(st);
+  //     // Set the video source to the `videoRef`
+  //     if (localVideoRef.current) {
+  //       localVideoRef.current.srcObject = st;
+  //     }
+  //   } catch (error) {
+  //     console.error('Error accessing camera:', error);
+  //   }
+  // }, [cons]);
   
-  useEffect(() => {
-    getMyVideo();
-  }, [getMyVideo]);
+  // useEffect(() => {
+  //   getMyVideo();
+  // }, [getMyVideo]);
 
 
   useEffect(()=>{
