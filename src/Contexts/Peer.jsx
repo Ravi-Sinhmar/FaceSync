@@ -50,14 +50,9 @@ return true;
 // sendig Vidoe
 const sendVideo = async (video)=>{
   const tracks = video.getTracks();
-  if (tracks.length > 0) { // Check if there are any tracks
     for (const track of tracks) {
       peer.addTrack(track, video);
-    }
-   setHasTracks(true);
-  } else {
-    console.log("No tracks found in the video stream.");
-  }
+  } 
   
 
 }
@@ -88,7 +83,7 @@ useEffect(()=>{
 
 
   return (
-    <PeerContext.Provider value={{ peer ,disconnect,hasTracks,createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream,setting,setSetting,cons,setCons}}>
+    <PeerContext.Provider value={{ peer ,disconnect,createOffer,createAnswer,setRemoteAnswer,sendVideo,remoteStream,setting,setSetting,cons,setCons}}>
       {props.children}
     </PeerContext.Provider>
   );

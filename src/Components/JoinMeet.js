@@ -28,7 +28,6 @@ function JoinMeet() {
   const [isMicEnabled, setIsMicEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isRemoteAudioEnabled, setIsRemoteAudioEnabled] = useState(true);
-  const [videoAdded, setVideoAdded] = useState(false);
   const [signaling, setStartSignaling] = useState(false);
   const [handShake, setHandShake] = useState(false);
   const [reload, setReload] = useState(false);
@@ -44,7 +43,7 @@ function JoinMeet() {
     setRemoteAnswer,
     sendVideo,
     remoteStream,
-    setting,setSetting,cons,disconnect,hasTracks
+    setting,setSetting,cons,disconnect
   } = usePeer();
 
   const handleInputChange = (event) => {
@@ -90,10 +89,10 @@ function JoinMeet() {
 
 
   useEffect(()=>{
-    if(setting === "ok" && hasTracks){
+    if(setting === "ok"){
       setStartSignaling(true);
     }
-  },[setting,hasTracks]);
+  },[setting]);
 
 
 const startAdminSocket = useCallback(() => {
@@ -272,7 +271,7 @@ return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,hasTracks,handShake,reload]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,handShake,reload]);
 
 const handleNeg = useCallback(async () => {
   }, []);
