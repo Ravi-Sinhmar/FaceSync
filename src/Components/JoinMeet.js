@@ -16,7 +16,7 @@ function JoinMeet() {
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
   const inputRef = useRef();
-  const [searchParams] = useSearchParams();
+  const [searchParams,setSearchParams] = useSearchParams();
   const [myVideo, setMyVideo] = useState(null);
   const [isMicEnabled, setIsMicEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);

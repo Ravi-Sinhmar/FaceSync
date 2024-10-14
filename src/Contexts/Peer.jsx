@@ -115,8 +115,10 @@ function PeerProvider(props) {
         setCons,
         setMainStream
       }}
-    >
-     {props.children}  
+    ><div>
+      <h1>Hi</h1>
+     {props.children}
+     </div>
     </PeerContext.Provider>
   );
 }
