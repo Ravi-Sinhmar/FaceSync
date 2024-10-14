@@ -224,8 +224,7 @@ if(adminSocketStatus && signaling){
   const adminMessageListener = async (event)=>{
     const data = JSON.parse(event.data);
     if(data.type === "userLive"){
-      alert("User is Live");
-adminSocket.send(JSON.stringify({admin:true,type:"adminLive",content:null}));
+window.location.reload();
       }else if(data.type === "userAnswer"){
         await setRemoteAnswer(data.content);
 
@@ -276,7 +275,6 @@ return () => {
   },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,hasTracks,handShake,reload]);
 
 const handleNeg = useCallback(async () => {
- alert("negNeed");
   }, []);
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
