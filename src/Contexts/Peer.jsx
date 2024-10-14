@@ -41,7 +41,7 @@ function PeerProvider(props) {
   const createAnswer = async (offer) => {
     console.log("state of wbeb setremote offer", peer.connectionState);
 
-    peer.setRemoteDescription(offer);
+    peer.setRemoteDescription(new RTCSessionDescription(offer));
 
     const answer = await peer.createAnswer();
 
@@ -53,7 +53,7 @@ function PeerProvider(props) {
   const setRemoteAnswer = async (answer) => {
     console.log("state of wbeb setremote answer", peer.connectionState);
 
-    await peer.setRemoteDescription(answer);
+    await peer.setRemoteDescription(new RTCSessionDescription(answer));
 
     return true;
   };
