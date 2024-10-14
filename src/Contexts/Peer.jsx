@@ -62,23 +62,11 @@ const sendVideo = async (video)=>{
 
 }
 
-const handleSendVideo = useCallback(async (event) => {
-  const video = event.streams[0];
-  console.log("Received remote stream:", video);
-
-  if (video) {
-    const tracks = video.getTracks();
-    if (tracks.length > 0) {
-      console.log("Remote video tracks:", tracks);
-      setRemoteStream(video);
-    } else {
-      console.error("No tracks found in the remote video stream.");
-    }
-  } else {
-    console.error("No remote stream received.");
-  }
-}, []);
-
+const handleSendVideo = useCallback(async(event)=>{
+  const video =await event.streams;
+  console.log("GOT TRACKS!!",video[0]);
+  setRemoteStream(video[0]);
+},[]);
 
 // close connection
 const disconnect = useCallback(() => {
