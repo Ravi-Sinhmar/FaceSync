@@ -272,7 +272,6 @@ return () => {
   },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,handShake,reload]);
 
 const handleNeg = useCallback(async () => {
-  setHandShake(false);
   console.log("Need Neg");
   }, []);
   useEffect(() => {
