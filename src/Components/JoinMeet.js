@@ -26,7 +26,7 @@ function JoinMeet() {
  
 
    // Contexts
-   const {adminName,setAdminName,meetingId,setMeetingId,setIsAdmin,setIsUser,userSocket,adminSocket,userSocketStatus,adminSocketStatus} = useSocket();
+   const {adminName,setAdminName,isUser,isAdmin,meetingId,setMeetingId,setIsAdmin,setIsUser,userSocket,adminSocket,userSocketStatus,adminSocketStatus} = useSocket();
    const{
     peer,
     disconnect,
@@ -86,7 +86,23 @@ function JoinMeet() {
     console.log("adminName:", adminName);
   }, [adminName]);
 
+  useEffect(() => {
+    console.log("meid:", meetingId);
+  }, [meetingId]);
 
+
+  useEffect(() => {
+    console.log("isUser:", isUser);
+  }, [isUser]);
+
+  useEffect(() => {
+    console.log("adminName:", isAdmin);
+  }, [isAdmin]);
+
+
+  useEffect(() => {
+    console.log("adminName:", isJoin);
+  }, [isJoin]);
 //  Collect My Stream 
   // const getMyVideo = useCallback(async () => {
   //   try {
