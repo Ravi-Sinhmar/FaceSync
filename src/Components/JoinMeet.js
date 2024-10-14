@@ -31,6 +31,7 @@ function JoinMeet() {
   const [videoAdded, setVideoAdded] = useState(false);
   const [signaling, setStartSignaling] = useState(false);
   const [handShake, setHandShake] = useState(false);
+  const [reload, setReload] = useState(false);
 
 
  
@@ -232,9 +233,9 @@ adminSocket.send(JSON.stringify({admin:true,type:"adminOffer",content:offer}));
       }else if(data.type === "userOffer"){
         const answer = await createAnswer(data.content);
 adminSocket.send(JSON.stringify({admin:true,type:"adminAnswer",content:answer}));
-      }else if(data.type === "reload"){
-  window.location.reload();
-
+      }else if(data.type === "reload" && !reload){
+   window.location.reload();
+   setReload(true);
       }
     }
 // Sending First Message
@@ -277,7 +278,7 @@ return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,hasTracks,handShake]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,hasTracks,handShake,reload]);
 
 const handleNeg = useCallback(async () => {
  alert("negNeed");
