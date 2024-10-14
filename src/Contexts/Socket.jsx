@@ -39,6 +39,7 @@ function SocketProvider(props) {
         `wss://facesyncbackend.onrender.com/?fullMeetId=${meetingId}__.us`
       );
       setUserSocket(newSocket);
+      console.log("userSoket",newSocket);
     }
   }, [meetingId, isUser]);
 
