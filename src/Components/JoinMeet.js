@@ -82,7 +82,9 @@ function JoinMeet() {
     seeMeet();
   },[seeMeet]);
 
-
+  useEffect(() => {
+    console.log("adminName:", adminName);
+  }, [adminName]);
 
 
 //  Collect My Stream 
