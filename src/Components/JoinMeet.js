@@ -219,6 +219,8 @@ const startAdminSocket = useCallback(() => {
   },[getRemoteVideo]);
 
   useEffect(()=>{
+    if (videoAdded && myVideo) {
+      sendVideo(myVideo).then(() => {
 if(adminSocketStatus && signaling){
   const adminMessageListener = async (event)=>{
     const data = JSON.parse(event.data);
@@ -275,8 +277,9 @@ if(!handShake){
 return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
+} });
 }
-  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,hasTracks,handShake]);
+  },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,hasTracks,handShake,myVideo,sendVideo,videoAdded]);
 
 const handleNeg = useCallback(async () => {
  alert("negNeed");
