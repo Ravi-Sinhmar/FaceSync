@@ -5,7 +5,7 @@ import { usePeer } from "./../Contexts/Peer";
 import { useNavigate } from 'react-router-dom';
 
 import Setting from "./Setting";
-import { off } from "../../../Backend/Models/meets";
+
 
 function JoinMeet() {
   const navigate = useNavigate();
