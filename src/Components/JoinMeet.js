@@ -82,7 +82,27 @@ function JoinMeet() {
     seeMeet();
   },[seeMeet]);
 
+  useEffect(() => {
+    console.log("adminName:", adminName);
+  }, [adminName]);
 
+  useEffect(() => {
+    console.log("meid:", meetingId);
+  }, [meetingId]);
+
+
+  useEffect(() => {
+    console.log("isUser:", isUser);
+  }, [isUser]);
+
+  useEffect(() => {
+    console.log("isAdmin:", isAdmin);
+  }, [isAdmin]);
+
+
+  useEffect(() => {
+    console.log("isJon:", isJoin);
+  }, [isJoin]);
 //  Collect My Stream 
   // const getMyVideo = useCallback(async () => {
   //   try {
@@ -159,38 +179,38 @@ return () => {
 
 
   // NavButton Functions..........
-  // const toggleMic = () => {
-  //   if (myVideo) {
-  //     const audioTrack = myVideo.getAudioTracks()[0];
-  //     audioTrack.enabled = !isMicEnabled;
-  //     setIsMicEnabled(!isMicEnabled);
-  //   }
-  // };
+  const toggleMic = () => {
+    if (myVideo) {
+      const audioTrack = myVideo.getAudioTracks()[0];
+      audioTrack.enabled = !isMicEnabled;
+      setIsMicEnabled(!isMicEnabled);
+    }
+  };
 
-  // const toggleVideo = () => {
-  //   if (myVideo) {
-  //     const videoTrack = myVideo.getVideoTracks()[0];
-  //     videoTrack.enabled = !isVideoEnabled;
-  //     setIsVideoEnabled(!isVideoEnabled);
-  //   }
-  // };
+  const toggleVideo = () => {
+    if (myVideo) {
+      const videoTrack = myVideo.getVideoTracks()[0];
+      videoTrack.enabled = !isVideoEnabled;
+      setIsVideoEnabled(!isVideoEnabled);
+    }
+  };
 
-  // const toggleRemoteAudio = () => {
-  //   if (remoteStream) {
-  //     const audioTrack = remoteStream.getAudioTracks()[0];
-  //     audioTrack.enabled = !isRemoteAudioEnabled;
-  //     setIsRemoteAudioEnabled(!isRemoteAudioEnabled);
-  //   }
-  // };
+  const toggleRemoteAudio = () => {
+    if (remoteStream) {
+      const audioTrack = remoteStream.getAudioTracks()[0];
+      audioTrack.enabled = !isRemoteAudioEnabled;
+      setIsRemoteAudioEnabled(!isRemoteAudioEnabled);
+    }
+  };
 
-  // const cutCall = ()=>{
-  //   disconnect();
-  //   navigate("/")
-  // };
+  const cutCall = ()=>{
+    disconnect();
+    navigate("/")
+  };
 
-  // const handleMore = useCallback(async()=>{
-  //   setSetting("start");
-  // },[setSetting]);
+  const handleMore = useCallback(async()=>{
+    setSetting("start");
+  },[setSetting]);
 
   // Jsx Code Start here 
   return (

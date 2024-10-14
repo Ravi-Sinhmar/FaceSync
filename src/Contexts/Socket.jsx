@@ -45,17 +45,24 @@ function SocketProvider(props) {
 
   useEffect(() => {
     startUserSocket();
+    console.log("st us");
+
   }, [startUserSocket]);
 
   useEffect(() => {
     startAdminSocket();
+    console.log("st ad");
   }, [startAdminSocket]);
 
 //  Socket status handling functions
   const handleAdminSocketStatus = () => {
+    console.log("h ad");
+
     setAdminSocketStatus(true);
   };
   const handleUserSocketStatus = () => {
+    console.log("h u");
+
     setUserSocketStatus(true);
   };
 
