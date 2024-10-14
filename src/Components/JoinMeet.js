@@ -5,6 +5,7 @@ import { usePeer } from "./../Contexts/Peer";
 import { useNavigate } from 'react-router-dom';
 
 import Setting from "./Setting";
+import { off } from "../../../Backend/Models/meets";
 
 function JoinMeet() {
   const navigate = useNavigate();
@@ -223,14 +224,22 @@ if(adminSocketStatus && signaling){
     const data = JSON.parse(event.data);
     if(data.type === "userLive"){
       alert("User is Live");
-      };
+const offer = await createOffer();
+adminSocket.send(JSON.stringify({admin:true,type:"adminOffer",content:offer}));
+      }else if(data.type === "userAnswer"){
+        await setRemoteAnswer(data.content);
+      }else if(data.type === "userOffer"){
+        const answer = await createAnswer(data.content);
+adminSocket.send(JSON.stringify({admin:true,type:"adminAnswer",content:answer}));
+      }else{
+adminSocket.send(JSON.stringify({admin:true,type:"adminLive",content:null}));
+      }
     }
 // Sending First Message
 if(!handShake){
-  adminSocket.send(JSON.stringify({admin:false,type:"adminLive",content:null}));
+  adminSocket.send(JSON.stringify({admin:true,type:"adminLive",content:null}));
   setHandShake(true);
 }
-
       // Listening to Messages
    adminSocket.addEventListener("message", adminMessageListener);
   return () => {
@@ -244,6 +253,15 @@ if(userSocketStatus && joined && signaling){
   const data = JSON.parse(event.data);
    if(data.type === "adminLive"){
     alert("Admin is Live");
+    const offer = await createOffer();
+    userSocket.send(JSON.stringify({admin:false,type:"userOffer",content:offer}));
+   }else if(data.type ==="adminOffer"){
+    const answer = await createAnswer(data.content);
+  userSocket.send(JSON.stringify({admin:false,type:"userAnswer",content:answer}));
+   }else if(data.type === "adminAnswer"){
+  await setRemoteAnswer(data.content);
+   }else{
+  userSocket.send(JSON.stringify({admin:false,type:"userLive",content:null}));
    }
           };
 // Sending First Message
