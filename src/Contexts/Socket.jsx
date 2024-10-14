@@ -44,6 +44,13 @@ function SocketProvider(props) {
   }, [meetingId, isUser]);
 
   useEffect(() => {
+    
+    console.log(userSocket);
+
+  }, [userSocket]);
+
+  
+  useEffect(() => {
     startUserSocket();
     console.log("st us");
 
