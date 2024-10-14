@@ -15,6 +15,7 @@ function JoinMeet() {
   const navigate = useNavigate();
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
+  const inputRef = useRef();
   const [searchParams] = useSearchParams();
   const [myVideo, setMyVideo] = useState(null);
   const [isMicEnabled, setIsMicEnabled] = useState(true);
@@ -26,7 +27,7 @@ function JoinMeet() {
 
    // Contexts
    const {adminName,setAdminName,meetingId,setMeetingId,setIsAdmin,setIsUser,userSocket,adminSocket,userSocketStatus,adminSocketStatus} = useSocket();
-  const{
+   const{
     peer,
     disconnect,
     createOffer,
@@ -41,10 +42,11 @@ function JoinMeet() {
   } = usePeer();
 
   // Get the Name
-  const handleInputChange = (event) => {
-    let aName = event.target.value;
-    setAdminName(aName);
-  };
+  const handleJoinClick = ()=>{
+   const aName = inputRef.current.value;
+   setAdminName(aName);
+   setIsJoin(true);
+  }
 
    // Check if it's Admin or  User
   const seeMeet = useCallback(() => {
@@ -188,18 +190,18 @@ return () => {
   return (
     <React.Fragment>
 {!isJoin ? (<React.Fragment> <input
-                value={adminName}
-                onChange={handleInputChange}
+
+                ref={inputRef}
                 placeholder="Your name please"
                 className="border border-blt rounded-md py-2 bg-blm"
                 type="text"
               />
-              <button onClick={()=>{setIsJoin(true)}} >JOIN</button>
+              <button onClick={handleJoinClick} >JOIN</button>
             </React.Fragment>
           ) : null}
 
 
-      {true  ? (
+      {isJoin  ? (
         <div className="w-svw h-svh bg-blm  flex justify-center items-center ">
           <div className="bg-blf h-full sm:w-1/2 md:w-1/4   flex flex-col justify-between overflow-hidden relative px-2 pt-2">
             <video
