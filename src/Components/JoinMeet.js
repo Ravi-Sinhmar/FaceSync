@@ -283,9 +283,7 @@ const handleNeg = useCallback(async () => {
   }, [handleNeg, peer]);
 
  useEffect(() => {
-    if (myVideo) {
       sendVideo(myVideo);
-    }
   }, [sendVideo,myVideo]);
 
   return (
