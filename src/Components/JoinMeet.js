@@ -157,7 +157,7 @@ const startAdminSocket = useCallback(() => {
     try {
       const st = await navigator.mediaDevices.getUserMedia(cons);
       setMyVideo(st);
-      setVideoAdded(true);
+    
       console.log('Video tracks:', st.getVideoTracks());
       console.log('Audio tracks:', st.getAudioTracks());
       // Set the video source to the `videoRef`
@@ -284,10 +284,10 @@ const handleNeg = useCallback(async () => {
   }, [handleNeg, peer]);
 
  useEffect(() => {
-    if (videoAdded && myVideo) {
+    if (myVideo) {
       sendVideo(myVideo);
     }
-  }, [sendVideo,myVideo,videoAdded]);
+  }, [sendVideo,myVideo]);
 
   return (
     <React.Fragment>
