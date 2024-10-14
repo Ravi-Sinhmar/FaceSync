@@ -22,7 +22,7 @@ function SocketProvider(props) {
 
 //   Start Sockets Callback functions...
   const startAdminSocket = useCallback(() => {
-    if (isAdmin && false) {
+    if (isAdmin) {
       console.log("isAdmin Soket is goin to generate")
       const newSocket = new WebSocket(
         `wss://facesyncbackend.onrender.com/?fullMeetId=${meetingId}__.ad`
@@ -33,7 +33,7 @@ function SocketProvider(props) {
   }, [isAdmin, meetingId]);
 
   const startUserSocket = useCallback(() => {
-    if (isUser && false) {
+    if (isUser) {
       console.log("isUser Soket is goin to generate")
       const newSocket = new WebSocket(
         `wss://facesyncbackend.onrender.com/?fullMeetId=${meetingId}__.us`

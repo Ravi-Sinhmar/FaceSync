@@ -107,10 +107,13 @@ function JoinMeet() {
   useEffect(()=>{
 if(userSocketStatus){
   const adminMessageListener = async (event)=>{
-    const data = JSON.parse(event.data);
-    
+console.log("test msg user");
+  
     }
-    useSocket.send(JSON.stringify({Message:"Hellow,from User"}));
+
+console.log("test msg out");
+
+  useSocket.send(JSON.stringify({Message:"Hellow,from User"}));
       // Listening to Messages
    adminSocket.addEventListener("message", adminMessageListener);
   return () => {
@@ -120,12 +123,13 @@ if(userSocketStatus){
 }
 if(adminSocketStatus){
   const userMessageListener = async(event)=>{
-  const data = JSON.parse(event.data);
-
+  // const data = JSON.parse(event.data);
+console.log("test msg admins");
           };
    // Listening to Messages
-adminSocket.send(JSON.stringify({Message:"Hellow,from Admin"}));
+console.log("test msg admins out");
 
+adminSocket.send(JSON.stringify({Message:"Hellow,from Admin"}));
 userSocket.addEventListener("message", userMessageListener);
 return () => {
   userSocket.removeEventListener("message", userMessageListener);
