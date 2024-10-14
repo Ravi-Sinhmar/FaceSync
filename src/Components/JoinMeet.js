@@ -96,12 +96,12 @@ function JoinMeet() {
   }, [isUser]);
 
   useEffect(() => {
-    console.log("adminName:", isAdmin);
+    console.log("isAdmin:", isAdmin);
   }, [isAdmin]);
 
 
   useEffect(() => {
-    console.log("adminName:", isJoin);
+    console.log("isJon:", isJoin);
   }, [isJoin]);
 //  Collect My Stream 
   // const getMyVideo = useCallback(async () => {
