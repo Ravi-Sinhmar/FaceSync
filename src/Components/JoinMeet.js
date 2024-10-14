@@ -201,7 +201,7 @@ return () => {
           ) : null}
 
 
-      {isJoin  ? (
+      {isJoin ? (
         <div className="w-svw h-svh bg-blm  flex justify-center items-center ">
           <div className="bg-blf h-full sm:w-1/2 md:w-1/4   flex flex-col justify-between overflow-hidden relative px-2 pt-2">
             <video
@@ -339,9 +339,9 @@ return () => {
             </div>
           </div>
         </div>
-      ) : (
-        <Setting localVideoRef={localVideoRef} />
-      )}
+      ) : 
+      null
+      }
     </React.Fragment>
   );
 }
