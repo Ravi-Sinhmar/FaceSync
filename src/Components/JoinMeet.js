@@ -223,10 +223,10 @@ if(adminSocketStatus && signaling){
   const adminMessageListener = async (event)=>{
     const data = JSON.parse(event.data);
     if(data.type === "userLive"){
-     
+const offer = await createOffer();
+adminSocket.send(JSON.stringify({admin:true,type:"adminOffer",content:offer}));
       }else if(data.type === "userAnswer"){
         await setRemoteAnswer(data.content);
-
       }else if(data.type === "userOffer"){
         const answer = await createAnswer(data.content);
 adminSocket.send(JSON.stringify({admin:true,type:"adminAnswer",content:answer}));
@@ -249,9 +249,7 @@ if(userSocketStatus && joined && signaling){
   const userMessageListener = async(event)=>{
   const data = JSON.parse(event.data);
    if(data.type === "adminLive"){
-    alert("Admin is Live");
-    const offer = await createOffer();
-    userSocket.send(JSON.stringify({admin:false,type:"userOffer",content:offer}));
+    userSocket.send(JSON.stringify({admin:false,type:"userLive",content:null}));
    }else if(data.type ==="adminOffer"){
     const answer = await createAnswer(data.content);
   userSocket.send(JSON.stringify({admin:false,type:"userAnswer",content:answer}));
@@ -266,7 +264,7 @@ if(!handShake){
 }
 
    // Listening to Messages
-  userSocket.addEventListener("message", userMessageListener);
+userSocket.addEventListener("message", userMessageListener);
 return () => {
   userSocket.removeEventListener("message", userMessageListener);
 };
@@ -274,6 +272,8 @@ return () => {
   },[adminSocketStatus,userSocketStatus,adminCon,adminSocket,userSocket,userName,joined,fullName,createAnswer,createOffer,setRemoteAnswer,signaling,handShake,reload]);
 
 const handleNeg = useCallback(async () => {
+  setHandShake(false);
+  console.log("Need Neg");
   }, []);
   useEffect(() => {
     peer.addEventListener("negotiationneeded", handleNeg);
