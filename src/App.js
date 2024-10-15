@@ -14,8 +14,9 @@ import "./index.css";
 function App() {
   return (
    
-    <SocketProvider>
       <PeerProvider>
+    <SocketProvider>
+
     <Router>
       <Routes>
         {/* <Route path="/" element={<Test />} /> */}
@@ -23,8 +24,9 @@ function App() {
         <Route path="/meeting" element={<JoinMeet />} />
       </Routes>
     </Router>
-    </PeerProvider>
     </SocketProvider>
+
+    </PeerProvider>
    
 
   );
