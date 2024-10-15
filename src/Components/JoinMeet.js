@@ -25,7 +25,7 @@ function JoinMeet() {
   const [myVideo, setMyVideo] = useState(null);
  
   // contexts
-  const { setFriend, adminCon, friend, setAdminCon } = useFriend();
+  const {adminCon, setAdminCon } = useFriend();
   const {
     peer,
     createOffer,
@@ -164,9 +164,9 @@ const startAdminSocket = useCallback(() => {
 
   const getRemoteVideo = useCallback(()=>{
     if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = video;
+      remoteVideoRef.current.srcObject = remoteStream;
     }
-  });
+  },[remoteStream]);
 
   useEffect(()=>{
     getRemoteVideo();
