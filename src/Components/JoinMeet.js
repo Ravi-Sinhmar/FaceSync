@@ -123,6 +123,24 @@ function JoinMeet() {
 
   
 
+<<<<<<< HEAD
+=======
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+    }
+  }, []);
+  useEffect(() => {
+    getMyVideo();
+  }, [getMyVideo]);
+
+
+  const getRemoteVideo = useCallback(()=>{
+    if (remoteVideoRef.current) {
+      remoteVideoRef.current.srcObject = video;
+    }
+  });
+>>>>>>> parent of 2b5af72 (done with logic)
 
   useEffect(()=>{
 if(userSocketStatus && useSocket){
