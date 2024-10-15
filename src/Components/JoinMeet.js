@@ -164,9 +164,9 @@ const startAdminSocket = useCallback(() => {
 
   const getRemoteVideo = useCallback(()=>{
     if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = remoteStream;
+      remoteVideoRef.current.srcObject = video;
     }
-  },[remoteStream]);
+  });
 
   useEffect(()=>{
     getRemoteVideo();
